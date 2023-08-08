@@ -13,9 +13,9 @@ function encode(unsignedInteger: number | bigint): VarInt {
   const bytes = getVarIntByteSequence(bits);
 
   console.log(
-    `Encoding ${typeof unsignedInteger} ${unsignedInteger} (${
+    `Encoding ${typeof unsignedInteger} ${unsignedInteger} (${Math.ceil(
       bits.length / 8
-    } bytes) as a ProBuff Varint (${bytes.length} bytes)`
+    )} bytes) as a ProBuff Varint (${bytes.length} bytes)`
   );
   return getHexSequenceFromByteSequence(bytes);
 }
