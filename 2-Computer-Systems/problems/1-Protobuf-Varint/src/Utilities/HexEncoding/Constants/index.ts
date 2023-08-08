@@ -1,4 +1,4 @@
-const BINARY_HEXADECIMALS = {
+export const BINARY_HEXADECIMALS = {
   '0000': '0',
   '0001': '1',
   '0010': '2',
@@ -16,5 +16,3 @@ const BINARY_HEXADECIMALS = {
   '1110': 'E',
   '1111': 'F',
 } as const;
-
-export default BINARY_HEXADECIMALS;

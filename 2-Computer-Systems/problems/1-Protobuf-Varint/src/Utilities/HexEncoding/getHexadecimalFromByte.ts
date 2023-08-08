@@ -1,5 +1,5 @@
 import { Byte } from '../BinaryEncoding/bit';
-import BINARY_HEXADECIMALS from './Constants';
+import { BINARY_HEXADECIMALS } from './Constants';
 import { HexByte } from './hexTypes';
 import isBitQuintuplet from './isBitQuintuplet';
 

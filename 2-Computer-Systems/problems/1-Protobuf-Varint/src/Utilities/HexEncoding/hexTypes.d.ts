@@ -1,4 +1,4 @@
-import BINARY_HEXADECIMALS from './Constants';
+import { BINARY_HEXADECIMALS } from './Constants';
 
 export type BitQuintuplet = keyof typeof BINARY_HEXADECIMALS;
 
