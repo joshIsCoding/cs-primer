@@ -7,6 +7,9 @@
   "author": "Josh Brown",
   "license": "None",
   "private": true,
+  "scripts": {
+    "start": "tsc && node output/start.js"
+  },
   "devDependencies": {
     "@types/node": "^20.4.9"
   }
