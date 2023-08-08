@@ -1,0 +1,13 @@
+{
+  "name": "1-Protobuf-Varint",
+  "version": "1.0.0",
+  "description": "Encoder and decoder of variable-length integers as per Protocol Buffers spec",
+  "main": "output/start.js",
+  "repository": "https://github.com/joshIsCoding/cs-primer/tree/1-protobuf-varint",
+  "author": "Josh Brown",
+  "license": "None",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^20.4.9"
+  }
+}
