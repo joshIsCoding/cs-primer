@@ -6,4 +6,3 @@ export type ValueOf<T> = T[keyof T];
 
 export type HexDigit = ValueOf<typeof BINARY_HEXADECIMALS>;
 export type HexByte = `${HexDigit}${HexDigit}`;
-export type VarInt = `0x${string}`;

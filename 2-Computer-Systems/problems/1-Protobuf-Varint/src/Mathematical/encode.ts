@@ -1,7 +1,7 @@
+import { VarInt } from '../varint';
 import getBigIntBitSequence from './Utilities/BinaryEncoding/getBigIntBitSequence';
 import getNumberBitSequence from './Utilities/BinaryEncoding/getNumberBitSequence';
 import getHexSequenceFromByteSequence from './Utilities/HexEncoding/getHexSequenceFromByteSequence';
-import { VarInt } from './Utilities/HexEncoding/hexTypes';
 import { pluralise } from './Utilities/Logging/pluralise';
 import getVarIntByteSequence from './Utilities/VarInt/getVarIntByteSequence';
 

@@ -1,5 +1,5 @@
+import { VarInt } from '../../../varint';
 import { Byte } from '../BinaryEncoding/bit';
-import { VarInt } from './hexTypes';
 import getHexadecimalFromByte from './getHexadecimalFromByte';
 
 function getHexSequenceFromByteSequence(byteSeq: Byte[]): VarInt {
