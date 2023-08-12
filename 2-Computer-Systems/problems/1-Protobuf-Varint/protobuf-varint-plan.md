@@ -45,3 +45,32 @@ The output will take the 8 bytes and work through each group of 7 bits, figuring
 
 
 
+### Challenge Extension - Bitwise Implementation
+
+Using ArrayBuffers, we should be able to handle this problem entirely with binary data operations. We'd need a buffer representing the output with 10 bytes of memory allocated. Then, we'd need bitwise operations to extract the sequences of 7 bits from the input number, mapping these bytes in the buffer.
+
+MAJOR REALISATION
+
+Endianness does not impact bitwise operations. Bitwise operations treat numbers as binary numbers with big-endian sorting.
+
+
+With a 2-byte number, (big-endian)
+
+```JavaScript
+const n = 0000 0000 0000 0001
+const m = 0000 0000 0111 1111 // 127 uint
+
+const first_byte = n & m
+// 0000 0000 0000 0000 0001 & 0000 0000 0111 1111 = 0000 0000 0000 0001
+const pos_continuation = 1000 0000 // 128
+
+const continuation_mask = 2^(7*i) - 1
+const needsContinuation = i & !continuation_mask === 0
+// 0000 0000 0000 0000 0001 & 1111 1111 1000 0000
+
+
+}
+
+```
+
+
