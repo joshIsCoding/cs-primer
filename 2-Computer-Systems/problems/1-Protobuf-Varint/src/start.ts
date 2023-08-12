@@ -1,5 +1,5 @@
-import encode from './encode';
+import mathematicalEncode from './Mathematical/encode';
 
-console.log(` => ${encode(1)}`);
-console.log(` => ${encode(150)}`);
-console.log(` => ${encode(30000)}`);
+console.log(` => ${mathematicalEncode(1)}`);
+console.log(` => ${mathematicalEncode(150)}`);
+console.log(` => ${mathematicalEncode(30000)}`);
