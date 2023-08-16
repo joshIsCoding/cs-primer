@@ -22,7 +22,7 @@ function getVarIntBytesForNumber(number: number): Uint8Array {
   let truncatedNum = number;
   const mask = 127; // 0111 1111
 
-  // for each of the 10 possible var-int bytes
+  // for each of the 5 possible var-int bytes for Number encoded integers
   for (let i = 0; i < buffer.length; i++) {
     const willContinue = (truncatedNum & ~mask) !== 0;
     const continuationBit = willContinue ? 128 : 0; // 1000 0000 OR 0000 0000
