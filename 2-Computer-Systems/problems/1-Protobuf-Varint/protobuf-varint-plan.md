@@ -68,9 +68,36 @@ const continuation_mask = 2^(7*i) - 1
 const needsContinuation = i & !continuation_mask === 0
 // 0000 0000 0000 0000 0001 & 1111 1111 1000 0000
 
-
-}
-
 ```
 
+### Decoding
 
+We need to 'snip' out every 8th bit. Snipping only appears possible with successive combinations of shifts and masks. Essentially, we'll need to be procedural with the bit vector and the mask, such that OR-ing them togther correctly aligns with the original bit positions.
+
+```JavaScript
+
+const vi = 0110 0101 1010 0110;
+const m1 =           0111 1111;
+
+const vi = 0110 0101 1010 0110;
+const m1 = 0000 0000 0111 1111;
+|
+const           vi = 0110 0101 1010 0110; >> 8 * n
+const m1 =           0111 1111;
+<< 7 * n
+
+
+// step 1
+let bv0 = vi & m1
+const v0 = vi
+
+// step 2
+bv1 = bv0 | (((vi >> 8) & m10) << 7 )
+bv1 = bv0 | (((vi & (m10 << 8)) >> 1))
+// step 3
+bv2 = bv1 | (((vi >> 8) & m1) << 7 )
+bv = bv | (((vi & (m2 << 8)) >> 2))
+/ step 4
+bv = bv | (((vi & (m2 << 16)) >> 3))
+
+```
