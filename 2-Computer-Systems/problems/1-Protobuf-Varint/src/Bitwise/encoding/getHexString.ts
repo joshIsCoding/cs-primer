@@ -1,4 +1,4 @@
-import { VarInt } from '../varint';
+import { VarInt } from '../../varint';
 
 function getHexString(bytes: Uint8Array): VarInt {
   let hexStr = '';

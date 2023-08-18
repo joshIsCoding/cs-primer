@@ -1,5 +1,5 @@
-import getHexString from './getHexString';
-import getVarIntByteArray from './getVarIntByteArray';
+import getHexString from './encoding/getHexString';
+import getVarIntByteArray from './encoding/getVarIntByteArray';
 
 const sixtyFourBitMax = BigInt('0xffffffffffffffff');
 
