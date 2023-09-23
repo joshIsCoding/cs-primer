@@ -10,6 +10,7 @@ function getVarIntBytesForBigInt(number: bigint): Uint8Array {
     const continuationBit = willContinue ? BigInt(128) : bigZero; // 1000 0000 OR 0000 0000
     const nextVarIntByte = (truncatedNum & mask) | continuationBit;
     buffer[i] = Number(BigInt.asUintN(8, nextVarIntByte));
+
     if (!willContinue) break;
 
     truncatedNum = truncatedNum >> BigInt(7);
