@@ -51,5 +51,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# Yarn
+**/node_modules/
+
 // Obsidian utilities
 **/.obsidian/**
