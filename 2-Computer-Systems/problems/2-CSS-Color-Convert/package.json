@@ -1,0 +1,13 @@
+{
+  "name": "CSSHexColorConverter",
+  "version": "0.1.0",
+  "description": "Replaces hexadecimal colours in CSS files with RGB colours",
+  "main": "index.js",
+  "author": "Josh Brown",
+  "license": "Private",
+  "private": true,
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "typescript": "^5.2.2"
+  }
+}
