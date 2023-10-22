@@ -1,12 +1,20 @@
 import { isHexDigit, HEX_DIGITS } from './hexDigits';
 
-function parseHexAsDecimal(_hexNumber: string): number {
-  const hexNumber = _hexNumber.toLowerCase();
-  if (!isHexDigit(hexNumber)) throw new Error(`Unrecognised hex character${hexNumber}`);
+function parseHexCharacterAsDecimal(hexChar: string): number {
+  if (!isHexDigit(hexChar)) throw new Error(`Unrecognised hex character${hexChar}`);
 
-  const singleDigit = HEX_DIGITS[hexNumber];
+  return HEX_DIGITS[hexChar];
+}
 
-  return singleDigit;
+function parseHexAsDecimal(_hexString: string): number {
+  const hexString = _hexString.toLowerCase();
+
+  return hexString.split('').reduce(
+    (decimalSum, hexChar, i, characters) =>
+      // each hex digit represents a multiple of a power of 16, according to its position
+      decimalSum + parseHexCharacterAsDecimal(hexChar) * Math.pow(16, characters.length - i - 1),
+    0
+  );
 }
 
 export default parseHexAsDecimal;

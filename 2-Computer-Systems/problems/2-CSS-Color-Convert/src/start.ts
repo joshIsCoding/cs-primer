@@ -1,3 +1,3 @@
 import parseHexAsDecimal from './parser/parseHexAsDecimal';
 
-console.log('Parse x/f as a number', parseHexAsDecimal('f'));
+console.log('Parse 0xffff as a number', parseHexAsDecimal('fffff'));
