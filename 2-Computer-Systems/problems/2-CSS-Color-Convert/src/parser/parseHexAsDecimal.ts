@@ -1,14 +1,13 @@
 import { isHexDigit, HEX_DIGITS } from './hexDigits';
 
-function parseHexCharacterAsDecimal(hexChar: string): number {
-  if (!isHexDigit(hexChar)) throw new Error(`Unrecognised hex character${hexChar}`);
+function parseHexCharacterAsDecimal(_hexChar: string): number {
+  const hexChar = _hexChar.toLowerCase();
+  if (!isHexDigit(hexChar)) throw new Error(`Unrecognised hex character ${hexChar}`);
 
   return HEX_DIGITS[hexChar];
 }
 
-function parseHexAsDecimal(_hexString: string): number {
-  const hexString = _hexString.toLowerCase();
-
+function parseHexAsDecimal(hexString: string): number {
   return hexString.split('').reduce(
     (decimalSum, hexChar, i, characters) =>
       // each hex digit represents a multiple of a power of 16, according to its position
