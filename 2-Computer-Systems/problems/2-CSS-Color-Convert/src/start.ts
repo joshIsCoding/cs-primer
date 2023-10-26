@@ -1,3 +1,3 @@
-import parseHexAsDecimal from './parser/parseHexAsDecimal';
+import convertHexColorToRGB from './convertHexColorToRGB';
 
-console.log('Parse 0xffff as a number', parseHexAsDecimal('fffff'));
+console.log('Convert #f5a742 to RGB', convertHexColorToRGB('#f5a742'));
