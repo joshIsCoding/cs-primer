@@ -1,21 +1,30 @@
 import parseHexAsDecimal from './parser/parseHexAsDecimal';
+import roundDecimal from './utils/roundDecimal';
 
 type HexColor = `#${string}`;
 type RGBColor = `rgb(${number}, ${number}, ${number})`;
+type RGBAColor = `rgb(${number}, ${number}, ${number}, ${number})`;
 type RGBDigits = [number, number, number];
+type RGBADigits = [number, number, number, number];
 
-function convertHexColorToRGB(hexColor: HexColor): RGBColor {
+function convertHexColorToRGB(hexColor: HexColor): RGBColor | RGBAColor {
   const hexStr = hexColor.slice(1);
-  const rgbDigits: RGBDigits = [0, 0, 0];
+  const rgbDigits: RGBADigits = [0, 0, 0, 1];
+  const isShorthand = hexStr.length === 3 || hexStr.length === 4;
+  const increment = isShorthand ? 1 : 2;
 
-  for (let i = 0; i < 3; i++) {
-    if (rgbDigits[i] !== 0) throw new Error(`Invalid index ${i} for RGB array ${rgbDigits}`);
+  for (let i = 0; i < hexStr.length; i += increment) {
+    const j = isShorthand ? i : i + 1;
+    const hexDigits = `${hexStr[i]}${hexStr[j]}`;
+    const decimal = parseHexAsDecimal(hexDigits);
+    const rgbIndex = isShorthand ? i : i / 2;
 
-    const j = 2 * i;
-    rgbDigits[i] = parseHexAsDecimal(hexStr.slice(j, j + 2));
+    rgbDigits[rgbIndex] = rgbIndex === 3 ? roundDecimal(decimal / 255) : decimal;
   }
 
-  return `rgb(${rgbDigits[0]}, ${rgbDigits[1]}, ${rgbDigits[2]})`;
+  if (rgbDigits[3] === 1) return `rgb(${rgbDigits[0]}, ${rgbDigits[1]}, ${rgbDigits[2]})`;
+
+  return `rgb(${rgbDigits[0]}, ${rgbDigits[1]}, ${rgbDigits[2]}, ${rgbDigits[3]})`;
 }
 
 export default convertHexColorToRGB;
