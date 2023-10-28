@@ -26,7 +26,7 @@ function requestFilenameInput(): Promise<string> {
 
 function requestOutputFilenameInput(inputFilename: string): Promise<[string, string]> {
   return rl
-    .question(`(Optional) please enter the output filename [${inputFilename}]:`)
+    .question(`(Optional) please enter the output filename [${inputFilename}]: `)
     .then((outputFilename) => [inputFilename, outputFilename]);
 }
 
