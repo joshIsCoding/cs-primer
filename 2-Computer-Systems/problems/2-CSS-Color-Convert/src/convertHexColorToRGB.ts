@@ -18,9 +18,9 @@ function convertHexColorToRGB(hexColor: HexColor): RGBColor | RGBAColor {
     rgbDigits[rgbIndex] = rgbIndex === 3 ? roundDecimal(decimal / 255) : decimal;
   }
 
-  if (rgbDigits[3] === 1) return `rgb(${rgbDigits[0]}, ${rgbDigits[1]}, ${rgbDigits[2]})`;
+  if (rgbDigits[3] === 1) return `rgb(${rgbDigits[0]} ${rgbDigits[1]} ${rgbDigits[2]})`;
 
-  return `rgb(${rgbDigits[0]}, ${rgbDigits[1]}, ${rgbDigits[2]}, ${rgbDigits[3]})`;
+  return `rgb(${rgbDigits[0]} ${rgbDigits[1]} ${rgbDigits[2]} / ${rgbDigits[3]})`;
 }
 
 export default convertHexColorToRGB;

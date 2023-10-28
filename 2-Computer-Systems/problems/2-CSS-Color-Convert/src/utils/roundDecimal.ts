@@ -1,4 +1,4 @@
-function roundDecimal(decimal: number, places: number = 2): number {
+function roundDecimal(decimal: number, places: number = 5): number {
   const pow10 = Math.pow(10, places);
   return Math.round(decimal * pow10) / pow10;
 }
