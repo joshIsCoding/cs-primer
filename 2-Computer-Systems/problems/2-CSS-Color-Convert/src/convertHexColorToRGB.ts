@@ -1,10 +1,6 @@
 import parseHexAsDecimal from './parser/parseHexAsDecimal';
+import { HexColor, RGBColor, RGBAColor } from './types/colors';
 import roundDecimal from './utils/roundDecimal';
-
-type HexColor = `#${string}`;
-type RGBColor = `rgb(${number}, ${number}, ${number})`;
-type RGBAColor = `rgb(${number}, ${number}, ${number}, ${number})`;
-type RGBDigits = [number, number, number];
 type RGBADigits = [number, number, number, number];
 
 function convertHexColorToRGB(hexColor: HexColor): RGBColor | RGBAColor {
