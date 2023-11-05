@@ -12,5 +12,9 @@
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "start": "ts-node src/start.ts",
+    "dev:start": "nodemon src/start.ts"
   }
 }
