@@ -54,6 +54,9 @@ dkms.conf
 # Output Directories
 **/output/
 
+# Templates
+**/ProjectTemplate/
+
 # Yarn
 **/node_modules/
 
