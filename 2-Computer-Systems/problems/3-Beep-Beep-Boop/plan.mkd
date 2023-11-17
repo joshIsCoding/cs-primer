@@ -1,0 +1,5 @@
+# Beep Beep Boop
+
+The goal is to create a terminal program that will take unbuffered/raw number key presses and trigger the ASCII bell sound the corresponding number of times. All other key presses should have no effect, though SIGINT (^C on MacOSX) should ideally terminate the program.
+
+A key requirement in the project description is to 'not bork the terminal' after termination. This implies that writing to a tty file might be a means of triggering the bell sound... On the other hand, if the tty directory simply outputs to STDOUT, perhaps interacting with these process streams directly within node would be a safer and smarter choice.
