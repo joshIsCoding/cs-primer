@@ -1,5 +1,5 @@
 {
-  "name": "BeepBeepBoopCLI",
+  "name": "beepbeepboop_cli",
   "version": "1.0.0",
   "description": "A program that takes number key presses and triggers a bell noise to the value of the number pressed",
   "main": "output/start.js",
