@@ -1,13 +1,30 @@
-import * as readline from 'node:readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
+import { stdin, stdout } from 'node:process';
 
-const rl = readline.createInterface({ input, output, prompt: 'Press any number key > ' });
+function isDigit(buffer: Buffer) {
+  return buffer.length === 1 && 48 <= buffer.readUInt8() && 58 >= buffer.readUInt8();
+}
 
-rl.prompt();
+function parseASCIIDigit(buffer: Buffer): number | null {
+  const digit = buffer.readUint8() - 48;
 
-rl.on('line', (input) => {
-  console.log(`Beeping ${input.trim()} times`);
-}).on('close', () => {
-  console.log('\r\nUntil we boop again!');
-  process.exit(0);
+  if (digit > 9 || digit < 0) return null;
+
+  return digit;
+}
+
+function getASCIIBellBuffer(bellCount: number) {
+  const byteArray = new Array(bellCount).fill(0x07);
+
+  return Buffer.from(byteArray);
+}
+
+stdin.on('data', (buffer) => {
+  const firstKeyBuffer = buffer.subarray(0, 1);
+  if (isDigit(firstKeyBuffer)) {
+    const numKey = parseASCIIDigit(firstKeyBuffer);
+    if (numKey) {
+      stdout.write(getASCIIBellBuffer(numKey));
+      console.log(new Array(numKey).fill('ding').join(' '));
+    }
+  }
 });
