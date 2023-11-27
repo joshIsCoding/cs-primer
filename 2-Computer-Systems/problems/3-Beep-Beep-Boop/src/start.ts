@@ -17,9 +17,7 @@ function parseASCIIDigit(buffer: Buffer): number | null {
 }
 
 function getASCIIBellBuffer(bellCount: number) {
-  const byteArray = new Array(bellCount).fill(0x07);
-
-  return Buffer.from(byteArray);
+  return Buffer.alloc(bellCount, 0x07);
 }
 
 function initProgram(): void {
