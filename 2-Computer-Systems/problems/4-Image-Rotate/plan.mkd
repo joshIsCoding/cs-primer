@@ -1,0 +1,16 @@
+# Image Rotation
+
+## Proposed Steps
+
+1. Figure out how to pass the file.
+	1. Start with the first couple of bytes.
+	2. Next, ascertain how each pixel is encoded.
+	3. Then try to find the dimensions.
+	4. Finally, figure out the row structure.
+2. Read the entire file into memory and extract the pixel data into some convenient structure.
+3. Rotate the pixels within a square image (into a new structure).
+	- consider dividing the image into quadrants, then making 4 in-place swaps for each quadrant for every pixel within the quadrant. This would, of course, present edge-cases that would need to be considered.
+	- on the other hand, this might be the only sane and complete way to conduct the rotation.
+4. Refactor the code.
+5. Rework the logic to handle non-square images.
+6. Refactor once again.
