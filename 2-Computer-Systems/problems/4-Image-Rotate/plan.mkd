@@ -14,3 +14,13 @@
 4. Refactor the code.
 5. Rework the logic to handle non-square images.
 6. Refactor once again.
+
+## Notes
+Excluding what must be the file header, there is slightly more bytes in the .bmp file than the total number of pixels in the image multiplied by 3 (a byte each for R, G and B). This bodes well. 
+
+The following format string yields the the signature, dimensions and pixel-array offset from the BMP header!
+
+```C
+1/2 "Signature: %02X\n" 1/4 "File Size: %04u\n" /4 "Reserved: %04X\n" /4 "Pixel-array offset: %4u\n" /4 "Header bytes: %4u\n" "Dimensions: %4u x %4u \n" 
+
+```
