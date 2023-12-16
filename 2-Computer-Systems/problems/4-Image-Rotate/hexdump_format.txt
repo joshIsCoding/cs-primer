@@ -1,1 +1,1 @@
-1/2 "Signature: %02X\n" 1/4 "File Size: %04u\n" /4 "Reserved: %04X\n" /4 "Offset: %4u\n" /4 "Header bytes: %4u\n" "Dimensions: %4u x %4u \n" 
+"Signature: %c%c\n" 1/4 "File Size: %04u\n" /4 "Reserved: %04X\n" /4 "Offset: %4u\n" /4 "Header bytes: %4u\n" "Dimensions: %4u x %4u\n" /2 "Planes: %02X\n" /2 "Bits/pixel: %02u\n" 
