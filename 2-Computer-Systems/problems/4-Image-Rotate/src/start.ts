@@ -16,6 +16,11 @@ const readTeapot = async () => {
   assertBitMapSignature(metadataBuffer);
   const { imageSize, imageXPixels, imageYPixels, bitsPerPixel, pixelArrayOffset } =
     getBitmapMetadata(metadataBuffer);
+  const pixelArray = await getPixelArray({
+    bitmapFile: teapotFile,
+    bytes: imageSize,
+    pixelArrayOffset,
+  });
 };
 
 readTeapot();
