@@ -1,7 +1,7 @@
 import { FileHandle } from 'fs/promises';
 import assertBitmapSignature from './assertBitmapSignature';
 import { endianness } from 'os';
-import { PIXEL_ARRAY_OFFSET } from './getBitmapMetadata';
+import { PIXEL_ARRAY_OFFSET } from './parseBitmapMetadata';
 
 // Assumes V5 header
 const getBitmapHeader = async (bmpFile: FileHandle): Promise<Buffer> => {

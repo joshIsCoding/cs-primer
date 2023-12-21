@@ -14,7 +14,7 @@ type BitmapMetadata = {
   [key in keyof typeof HEADER_BYTE_OFFSETS]: number;
 };
 
-const getBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
+const parseBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
   if (metadata.byteLength < 38) throw new Error('Partial bitmap header provided');
 
   if (endianness() === 'BE') {
@@ -36,4 +36,4 @@ const getBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
   };
 };
 
-export default getBitmapMetadata;
+export default parseBitmapMetadata;
