@@ -13,7 +13,7 @@ type BitmapMetadata = {
 };
 
 const getBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
-  if (metadata.byteLength > 38) throw new Error('Partial bitmap header provided');
+  if (metadata.byteLength < 38) throw new Error('Partial bitmap header provided');
 
   if (endianness() === 'BE') {
     return {
