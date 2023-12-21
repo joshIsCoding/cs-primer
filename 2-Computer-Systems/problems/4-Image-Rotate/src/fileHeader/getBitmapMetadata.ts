@@ -1,7 +1,9 @@
 import { endianness } from 'os';
 
+export const PIXEL_ARRAY_OFFSET = 10;
+
 const HEADER_BYTE_OFFSETS = {
-  pixelArrayOffset: 10,
+  pixelArrayOffset: PIXEL_ARRAY_OFFSET,
   imageXPixels: 18,
   imageYPixels: 22,
   bitsPerPixel: 28,
