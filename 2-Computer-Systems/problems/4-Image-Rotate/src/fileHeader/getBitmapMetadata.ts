@@ -1,7 +1,7 @@
 import { endianness } from 'os';
 
 const HEADER_BYTE_OFFSETS = {
-  pixelArrayByteOffset: 10,
+  pixelArrayOffset: 10,
   imageXPixels: 18,
   imageYPixels: 22,
   bitsPerPixel: 28,
@@ -18,7 +18,7 @@ const getBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
   if (endianness() === 'BE') {
     return {
       bitsPerPixel: metadata.readUInt16BE(HEADER_BYTE_OFFSETS['bitsPerPixel']),
-      pixelArrayByteOffset: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['pixelArrayByteOffset']),
+      pixelArrayOffset: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['pixelArrayOffset']),
       imageXPixels: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageXPixels']),
       imageYPixels: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageYPixels']),
       imageSize: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageSize']),
@@ -27,7 +27,7 @@ const getBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
 
   return {
     bitsPerPixel: metadata.readUInt16LE(HEADER_BYTE_OFFSETS['bitsPerPixel']),
-    pixelArrayByteOffset: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['pixelArrayByteOffset']),
+    pixelArrayOffset: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['pixelArrayOffset']),
     imageXPixels: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageXPixels']),
     imageYPixels: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageYPixels']),
     imageSize: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageSize']),
