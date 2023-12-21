@@ -1,21 +1,13 @@
 import { open } from 'node:fs/promises';
 import getBitmapMetadata from './fileHeader/getBitmapMetadata';
 import getPixelArray from './pixelArray/getPixelArrray';
-
-function assertBitMapSignature(metadata: Buffer): void {
-  const sig = metadata.subarray(0, 2);
-  if (sig.toString('ascii') === 'BM') return;
-
-  throw new Error('File header signature does not match that of a bitmap');
-}
+import getBitmapHeader from './fileHeader/getBitmapHeader';
 
 const readTeapot = async () => {
   const teapotFile = await open('helpfiles/teapot.bmp');
-  const metadataBuffer = Buffer.alloc(38);
-  const { bytesRead } = await teapotFile.read({ buffer: metadataBuffer, length: 38 });
-  assertBitMapSignature(metadataBuffer);
+  const fileHeader = await getBitmapHeader(teapotFile);
   const { imageSize, imageXPixels, imageYPixels, bitsPerPixel, pixelArrayOffset } =
-    getBitmapMetadata(metadataBuffer);
+    getBitmapMetadata(fileHeader);
   const pixelArray = await getPixelArray({
     bitmapFile: teapotFile,
     bytes: imageSize,
