@@ -4,8 +4,8 @@ export const PIXEL_ARRAY_OFFSET = 10;
 
 const HEADER_BYTE_OFFSETS = {
   pixelArrayOffset: PIXEL_ARRAY_OFFSET,
-  imageXPixels: 18,
-  imageYPixels: 22,
+  imageWidth: 18,
+  imageHeight: 22,
   bitsPerPixel: 28,
   imageSize: 34,
 } as const;
@@ -21,8 +21,8 @@ const parseBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
     return {
       bitsPerPixel: metadata.readUInt16BE(HEADER_BYTE_OFFSETS['bitsPerPixel']),
       pixelArrayOffset: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['pixelArrayOffset']),
-      imageXPixels: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageXPixels']),
-      imageYPixels: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageYPixels']),
+      imageWidth: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageWidth']),
+      imageHeight: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageHeight']),
       imageSize: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageSize']),
     };
   }
@@ -30,8 +30,8 @@ const parseBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
   return {
     bitsPerPixel: metadata.readUInt16LE(HEADER_BYTE_OFFSETS['bitsPerPixel']),
     pixelArrayOffset: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['pixelArrayOffset']),
-    imageXPixels: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageXPixels']),
-    imageYPixels: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageYPixels']),
+    imageWidth: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageWidth']),
+    imageHeight: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageHeight']),
     imageSize: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageSize']),
   };
 };
