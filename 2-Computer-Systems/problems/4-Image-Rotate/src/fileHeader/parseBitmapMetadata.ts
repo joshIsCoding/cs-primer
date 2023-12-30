@@ -3,6 +3,7 @@ import { endianness } from 'os';
 export const PIXEL_ARRAY_OFFSET = 10;
 
 const HEADER_BYTE_OFFSETS = {
+  fileSize: 2,
   pixelArrayOffset: PIXEL_ARRAY_OFFSET,
   imageWidth: 18,
   imageHeight: 22,
@@ -24,6 +25,7 @@ const parseBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
       imageWidth: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageWidth']),
       imageHeight: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageHeight']),
       imageSize: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageSize']),
+      fileSize: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['fileSize']),
     };
   }
 
@@ -33,6 +35,7 @@ const parseBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
     imageWidth: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageWidth']),
     imageHeight: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageHeight']),
     imageSize: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageSize']),
+    fileSize: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['fileSize']),
   };
 };
 
