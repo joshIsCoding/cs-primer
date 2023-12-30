@@ -1,11 +1,26 @@
-import { endianness } from 'os';
+interface PixelCoordinates {
+  x: number;
+  y: number;
+}
+
+interface GetRotatedPixelCoordinatesArgs extends PixelCoordinates {
+  imageWidth: number;
+}
+
+const getRotatedPixelCoordinates = ({
+  x: unrotatedX,
+  y: unrotatedY,
+  imageWidth,
+}: GetRotatedPixelCoordinatesArgs): PixelCoordinates => ({
+  x: unrotatedY,
+  y: imageWidth - unrotatedX - 1,
+});
 
 interface GetArrayOffsetFromPixelCoordinatesArgs {
   x: number;
   y: number;
   bytesPerPixel: number;
   bytesPerRow: number;
-  imageHeight: number;
 }
 
 const getArrayOffsetFromPixelCoordinates = ({
@@ -13,7 +28,6 @@ const getArrayOffsetFromPixelCoordinates = ({
   y,
   bytesPerPixel,
   bytesPerRow,
-  imageHeight,
 }: GetArrayOffsetFromPixelCoordinatesArgs): number => x * bytesPerPixel + y * bytesPerRow;
 
 interface GetRotatedPixelArrayArgs {
@@ -39,20 +53,17 @@ const getRotatedPixelArray = ({
   const unrotatedBytesPerRow = bytesPerPixel * imageWidth;
   const rotatedBytesPerRow = bytesPerPixel * imageHeight;
 
-  for (let y = imageHeight - 1; y >= 0; y--) {
+  for (let y = 0; y < imageHeight; y++) {
     for (let x = 0; x < imageWidth; x++) {
       const unrotatedArrayOffset = getArrayOffsetFromPixelCoordinates({
         x,
         y,
-        imageHeight,
         bytesPerPixel,
         bytesPerRow: unrotatedBytesPerRow,
       });
       const rotatedArrayOffset = getArrayOffsetFromPixelCoordinates({
-        x: y,
-        y: imageWidth - x - 1,
+        ...getRotatedPixelCoordinates({ x, y, imageWidth }),
         bytesPerPixel,
-        imageHeight: imageWidth,
         bytesPerRow: rotatedBytesPerRow,
       });
       const pixelValue = pixelArray.readUIntBE(unrotatedArrayOffset, bytesPerPixel);
