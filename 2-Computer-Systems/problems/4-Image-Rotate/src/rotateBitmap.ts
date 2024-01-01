@@ -5,8 +5,10 @@ import parseBitmapMetadata from './fileHeader/parseBitmapMetadata';
 import getPixelArray from './pixelArray/getPixelArrray';
 import getRotatedPixelArray from './pixelArray/getRotatedPixelArray';
 
+export const BITMAP_FILE_EXT_REGEX = /\.[bB][mM][pP]$/;
+
 const getRotatedFileName = (unrotatedFilename: string): string =>
-  `${unrotatedFilename.replace(RegExp('.[bB][mM][pP]'), '')}_rotated.bmp`;
+  `${unrotatedFilename.replace(BITMAP_FILE_EXT_REGEX, '')}_rotated.bmp`;
 
 async function rotateBitmap(filename: string): Promise<string> {
   const unrotatedBitmapFile = await open(filename);
