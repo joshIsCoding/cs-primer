@@ -1,12 +1,14 @@
 import { endianness } from 'os';
 
 export const PIXEL_ARRAY_OFFSET = 10;
+export const IMAGE_WIDTH_OFFSET = 18;
+export const IMAGE_HEIGHT_OFFSET = 22;
 
 const HEADER_BYTE_OFFSETS = {
   fileSize: 2,
   pixelArrayOffset: PIXEL_ARRAY_OFFSET,
-  imageWidth: 18,
-  imageHeight: 22,
+  imageWidth: IMAGE_WIDTH_OFFSET,
+  imageHeight: IMAGE_HEIGHT_OFFSET,
   bitsPerPixel: 28,
   imageSize: 34,
 } as const;
