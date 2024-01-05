@@ -16,6 +16,18 @@ const getRotatedPixelCoordinates = ({
   y: imageWidth - unrotatedX - 1,
 });
 
+interface GetBytesPerRowArgs {
+  bytesPerPixel: number;
+  pixelsPerRow: number;
+}
+
+const getBytesPerRow = ({ bytesPerPixel, pixelsPerRow }: GetBytesPerRowArgs): number => {
+  const pixelBytesPerRow = bytesPerPixel * pixelsPerRow;
+  const divisionBy4Remainder = pixelBytesPerRow % 4;
+  const rowPadding = divisionBy4Remainder === 0 ? 0 : 4 - divisionBy4Remainder;
+
+  return pixelBytesPerRow + rowPadding;
+};
 interface GetArrayOffsetFromPixelCoordinatesArgs {
   x: number;
   y: number;
@@ -43,15 +55,15 @@ const getRotatedPixelArray = ({
   imageWidth,
   imageHeight,
 }: GetRotatedPixelArrayArgs): Buffer => {
-  const rotatedPixelArrayBuffer = Buffer.alloc(pixelArray.byteLength);
   const bytesPerPixel = bitsPerPixel / 8;
-
   if (bytesPerPixel < 1) {
     throw new Error('Rotation of bitmaps with fewer than 8 bits per pixel currently unsupported');
   }
 
-  const unrotatedBytesPerRow = bytesPerPixel * imageWidth;
-  const rotatedBytesPerRow = bytesPerPixel * imageHeight;
+  const unrotatedBytesPerRow = getBytesPerRow({ bytesPerPixel, pixelsPerRow: imageWidth });
+  const rotatedBytesPerRow = getBytesPerRow({ bytesPerPixel, pixelsPerRow: imageHeight });
+
+  const rotatedPixelArrayBuffer = Buffer.alloc(rotatedBytesPerRow * imageWidth);
 
   for (let y = 0; y < imageHeight; y++) {
     for (let x = 0; x < imageWidth; x++) {
