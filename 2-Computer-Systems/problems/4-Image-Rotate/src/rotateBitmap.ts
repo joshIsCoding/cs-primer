@@ -4,6 +4,7 @@ import getBitmapHeader from './fileHeader/getBitmapHeader';
 import parseBitmapMetadata from './fileHeader/parseBitmapMetadata';
 import getPixelArray from './pixelArray/getPixelArrray';
 import getRotatedPixelArray from './pixelArray/getRotatedPixelArray';
+import getRotatedBitmapHeader from './fileHeader/getRotatedBitmapHeader';
 
 export const BITMAP_FILE_EXT_REGEX = /\.[bB][mM][pP]$/;
 
@@ -12,9 +13,9 @@ const getRotatedFileName = (unrotatedFilename: string): string =>
 
 async function rotateBitmap(filename: string): Promise<string> {
   const unrotatedBitmapFile = await open(filename);
-  const fileHeader = await getBitmapHeader(unrotatedBitmapFile);
+  const unrotatedHeader = await getBitmapHeader(unrotatedBitmapFile);
   const { fileSize, imageSize, imageWidth, imageHeight, bitsPerPixel, pixelArrayOffset } =
-    parseBitmapMetadata(fileHeader);
+    parseBitmapMetadata(unrotatedHeader);
   const pixelArray = await getPixelArray({
     bitmapFile: unrotatedBitmapFile,
     bytes: imageSize,
@@ -29,7 +30,12 @@ async function rotateBitmap(filename: string): Promise<string> {
 
   const rotatedFileName = getRotatedFileName(filename);
   const rotatedBitmapFile = await open(rotatedFileName, 'wx');
-  await rotatedBitmapFile.write(fileHeader);
+  const rotatedBitmapFileHeader = getRotatedBitmapHeader({
+    unrotatedHeader,
+    rotatedImageHeight: imageWidth,
+    rotatedImageWidth: imageHeight,
+  });
+  await rotatedBitmapFile.write(rotatedBitmapFileHeader);
   await rotatedBitmapFile.write(rotatedPixelArray, null, null, pixelArrayOffset);
   const rotatedFileFooter = await getBitmapFooter({
     file: rotatedBitmapFile,
