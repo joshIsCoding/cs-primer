@@ -78,8 +78,8 @@ const getRotatedPixelArray = ({
         bytesPerPixel,
         bytesPerRow: rotatedBytesPerRow,
       });
-      const pixelValue = pixelArray.readUIntBE(unrotatedArrayOffset, bytesPerPixel);
-      rotatedPixelArrayBuffer.writeUIntBE(pixelValue, rotatedArrayOffset, bytesPerPixel);
+      const pixelValue = pixelArray.readUIntLE(unrotatedArrayOffset, bytesPerPixel);
+      rotatedPixelArrayBuffer.writeUIntLE(pixelValue, rotatedArrayOffset, bytesPerPixel);
     }
   }
 
