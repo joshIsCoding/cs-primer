@@ -21,8 +21,8 @@ const parseBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
   return {
     bitsPerPixel: metadata.readUInt16LE(HEADER_BYTE_OFFSETS['bitsPerPixel']),
     pixelArrayOffset: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['pixelArrayOffset']),
-    imageWidth: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageWidth']),
-    imageHeight: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageHeight']),
+    imageWidth: metadata.readInt32LE(HEADER_BYTE_OFFSETS['imageWidth']),
+    imageHeight: metadata.readInt32LE(HEADER_BYTE_OFFSETS['imageHeight']),
     imageSize: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['imageSize']),
     fileSize: metadata.readUInt32LE(HEADER_BYTE_OFFSETS['fileSize']),
   };
