@@ -1,6 +1,5 @@
 import { FileHandle } from 'fs/promises';
 import assertBitmapSignature from './assertBitmapSignature';
-import { endianness } from 'os';
 import { PIXEL_ARRAY_OFFSET } from './parseBitmapMetadata';
 
 const getBitmapHeader = async (bmpFile: FileHandle): Promise<Buffer> => {
@@ -9,10 +8,7 @@ const getBitmapHeader = async (bmpFile: FileHandle): Promise<Buffer> => {
   await bmpFile.read({ buffer: headerBuffer, length: defaultHeaderSize });
   assertBitmapSignature(headerBuffer);
   // infer full header size (plus any colour table) from pixel array position
-  const headerSize =
-    endianness() === 'BE'
-      ? headerBuffer.readUInt32BE(PIXEL_ARRAY_OFFSET)
-      : headerBuffer.readUInt32LE(PIXEL_ARRAY_OFFSET);
+  const headerSize = headerBuffer.readUInt32LE(PIXEL_ARRAY_OFFSET);
 
   if (defaultHeaderSize === headerSize) return headerBuffer;
 

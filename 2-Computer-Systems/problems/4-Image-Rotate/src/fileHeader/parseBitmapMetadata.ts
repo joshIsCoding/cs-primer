@@ -1,5 +1,3 @@
-import { endianness } from 'os';
-
 export const PIXEL_ARRAY_OFFSET = 10;
 export const IMAGE_WIDTH_OFFSET = 18;
 export const IMAGE_HEIGHT_OFFSET = 22;
@@ -19,17 +17,6 @@ type BitmapMetadata = {
 
 const parseBitmapMetadata = (metadata: Buffer): BitmapMetadata => {
   if (metadata.byteLength < 38) throw new Error('Partial bitmap header provided');
-
-  if (endianness() === 'BE') {
-    return {
-      bitsPerPixel: metadata.readUInt16BE(HEADER_BYTE_OFFSETS['bitsPerPixel']),
-      pixelArrayOffset: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['pixelArrayOffset']),
-      imageWidth: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageWidth']),
-      imageHeight: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageHeight']),
-      imageSize: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['imageSize']),
-      fileSize: metadata.readUInt32BE(HEADER_BYTE_OFFSETS['fileSize']),
-    };
-  }
 
   return {
     bitsPerPixel: metadata.readUInt16LE(HEADER_BYTE_OFFSETS['bitsPerPixel']),
