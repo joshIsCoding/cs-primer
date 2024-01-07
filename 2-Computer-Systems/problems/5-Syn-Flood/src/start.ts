@@ -34,16 +34,90 @@ const getLinkHeaderType = (fileBuffer: Buffer, endianness: Endianness): number =
   }
 };
 
+interface GetSentAtDateFromEpochArgs {
+  seconds: number;
+  subSeconds: number;
+  subSecondsType: SubSecondsType;
+}
+
+const getSentAtDateFromEpoch = ({
+  seconds,
+  subSeconds,
+  subSecondsType,
+}: GetSentAtDateFromEpochArgs): Date =>
+  new Date(seconds * 1000 + subSeconds / (subSecondsType === 'micro' ? 1 : 1000));
+
+interface PacketRecord {
+  sentAt: Date;
+  byteLength: number;
+  pcapVersion: number;
+}
+
+interface PacketRecordArgs {
+  pcapBuffer: Buffer;
+  recordOffset: number;
+  endianness: Endianness;
+  subSecondsType: SubSecondsType;
+}
+
+const EPOCH_SECONDS_REL_OFFSET = 0;
+const EPOCH_SUB_SECONDS_REL_OFFSET = 4;
+const CAPTURE_LENGTH_REL_OFFSET = 8;
+const PACKET_HEADER_LENGTH = CAPTURE_LENGTH_REL_OFFSET + 8;
+
+const getPacketRecordAtOffset = ({
+  pcapBuffer,
+  recordOffset,
+  endianness,
+  subSecondsType,
+}: PacketRecordArgs): PacketRecord => {
+  if (endianness === 'LE') {
+    return {
+      sentAt: getSentAtDateFromEpoch({
+        seconds: pcapBuffer.readUInt32LE(recordOffset + EPOCH_SECONDS_REL_OFFSET),
+        subSeconds: pcapBuffer.readUInt32LE(recordOffset + EPOCH_SUB_SECONDS_REL_OFFSET),
+        subSecondsType,
+      }),
+      byteLength: pcapBuffer.readUint32LE(recordOffset + CAPTURE_LENGTH_REL_OFFSET),
+      pcapVersion: pcapBuffer.readUint32LE(recordOffset + PACKET_HEADER_LENGTH),
+    };
+  }
+
+  return {
+    sentAt: getSentAtDateFromEpoch({
+      seconds: pcapBuffer.readUInt32BE(recordOffset + EPOCH_SECONDS_REL_OFFSET),
+      subSeconds: pcapBuffer.readUInt32BE(recordOffset + EPOCH_SUB_SECONDS_REL_OFFSET),
+      subSecondsType,
+    }),
+    byteLength: pcapBuffer.readUInt32BE(recordOffset + CAPTURE_LENGTH_REL_OFFSET),
+    pcapVersion: pcapBuffer.readUInt32BE(recordOffset + PACKET_HEADER_LENGTH),
+  };
+};
+
 async function start() {
   const pcapFile = await open('helpfiles/synflood.pcap');
-  const packetStream = await readFile(pcapFile);
+  const pcapBuffer = await readFile(pcapFile);
 
-  const [fileEndianness, timestampSecondsFormat] = getPCapMetadata(packetStream);
-  const linkHeaderType = getLinkHeaderType(packetStream, fileEndianness);
+  const [fileEndianness, timestampSecondsFormat] = getPCapMetadata(pcapBuffer);
+  const linkHeaderType = getLinkHeaderType(pcapBuffer, fileEndianness);
 
   if (linkHeaderType !== 0) throw new Error(`Unsupported Link Header format ${linkHeaderType}`);
 
-  console.log(linkHeaderType);
+  let packetRecordOffset = 24;
+  const packetRecords: PacketRecord[] = [];
+
+  while (packetRecordOffset < pcapBuffer.byteLength) {
+    const packetRecord = getPacketRecordAtOffset({
+      pcapBuffer,
+      recordOffset: packetRecordOffset,
+      endianness: fileEndianness,
+      subSecondsType: timestampSecondsFormat,
+    });
+    packetRecords.push(packetRecord);
+    packetRecordOffset += PACKET_HEADER_LENGTH + packetRecord.byteLength;
+  }
+
+  console.log(packetRecords);
   pcapFile.close();
 }
 
