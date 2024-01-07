@@ -3,7 +3,9 @@ import { open, readFile } from 'fs/promises';
 const LE_MAGIC_STRING_UINT = 2712847316;
 const BE_MAGIC_STRING_UINT = 3569595041;
 
-const getPCapEndianess = (fileBuffer: Buffer): 'BE' | 'LE' => {
+type Endianness = 'BE' | 'LE';
+
+const getPCapEndianess = (fileBuffer: Buffer): Endianness => {
   const magicStringUInt = fileBuffer.readUInt32LE(0);
   switch (magicStringUInt) {
     case LE_MAGIC_STRING_UINT:
@@ -15,13 +17,26 @@ const getPCapEndianess = (fileBuffer: Buffer): 'BE' | 'LE' => {
   }
 };
 
+const LINK_HEADER_OFFSET = 22;
+
+const getLinkHeaderType = (fileBuffer: Buffer, endianness: Endianness): number => {
+  if (endianness === 'BE') {
+    return fileBuffer.readUInt16BE(LINK_HEADER_OFFSET);
+  } else {
+    return fileBuffer.readUInt16LE(LINK_HEADER_OFFSET);
+  }
+};
+
 async function start() {
   const pcapFile = await open('helpfiles/synflood.pcap');
   const packetStream = await readFile(pcapFile);
 
   const fileEndianness = getPCapEndianess(packetStream);
+  const linkHeaderType = getLinkHeaderType(packetStream, fileEndianness);
 
-  console.log(fileEndianness);
+  if (linkHeaderType !== 0) throw new Error(`Unsupported Link Header format ${linkHeaderType}`);
+
+  console.log(linkHeaderType);
   pcapFile.close();
 }
 
