@@ -25,6 +25,7 @@ const getPCapMetadata = (fileBuffer: Buffer): [Endianness, SubSecondsType] => {
 };
 
 const LINK_HEADER_OFFSET = 22;
+const FIRST_PACKET_RECORD_OFFSET = LINK_HEADER_OFFSET + 2;
 
 const getLinkHeaderType = (fileBuffer: Buffer, endianness: Endianness): number => {
   if (endianness === 'BE') {
@@ -103,7 +104,7 @@ async function start() {
 
   if (linkHeaderType !== 0) throw new Error(`Unsupported Link Header format ${linkHeaderType}`);
 
-  let packetRecordOffset = 24;
+  let packetRecordOffset = FIRST_PACKET_RECORD_OFFSET;
   const packetRecords: PacketRecord[] = [];
 
   while (packetRecordOffset < pcapBuffer.byteLength) {
