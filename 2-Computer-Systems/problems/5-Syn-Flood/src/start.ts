@@ -48,10 +48,31 @@ const getSentAtDateFromEpoch = ({
 }: GetSentAtDateFromEpochArgs): Date =>
   new Date(seconds * 1000 + subSeconds / (subSecondsType === 'micro' ? 1 : 1000));
 
+const packetTypesByLinktypeNullProtocol = {
+  2: 'IPv4',
+  24: 'IPv6',
+  28: 'IPv6',
+  30: 'IPv6',
+  7: 'OSI',
+  23: 'IPX',
+} as const;
+
+type ProtocolType = keyof typeof packetTypesByLinktypeNullProtocol;
+type PacketType = (typeof packetTypesByLinktypeNullProtocol)[ProtocolType];
+
+const isProtocolType = (protocolNum: number): protocolNum is ProtocolType =>
+  protocolNum in packetTypesByLinktypeNullProtocol;
+
+const getPacketTypeForProtocolType = (protocolType: number): PacketType => {
+  if (isProtocolType(protocolType)) {
+    return packetTypesByLinktypeNullProtocol[protocolType];
+  }
+  throw new Error(`Unrecognised protocol type from LINKTYPE_NULL header ${protocolType}`);
+};
 interface PacketRecord {
   sentAt: Date;
   byteLength: number;
-  pcapVersion: number;
+  packetType: PacketType;
 }
 
 interface PacketRecordArgs {
@@ -80,7 +101,9 @@ const getPacketRecordAtOffset = ({
         subSecondsType,
       }),
       byteLength: pcapBuffer.readUint32LE(recordOffset + CAPTURE_LENGTH_REL_OFFSET),
-      pcapVersion: pcapBuffer.readUint32LE(recordOffset + PACKET_HEADER_LENGTH),
+      packetType: getPacketTypeForProtocolType(
+        pcapBuffer.readUint32LE(recordOffset + PACKET_HEADER_LENGTH)
+      ),
     };
   }
 
@@ -91,7 +114,9 @@ const getPacketRecordAtOffset = ({
       subSecondsType,
     }),
     byteLength: pcapBuffer.readUInt32BE(recordOffset + CAPTURE_LENGTH_REL_OFFSET),
-    pcapVersion: pcapBuffer.readUInt32BE(recordOffset + PACKET_HEADER_LENGTH),
+    packetType: getPacketTypeForProtocolType(
+      pcapBuffer.readUint32BE(recordOffset + PACKET_HEADER_LENGTH)
+    ),
   };
 };
 
