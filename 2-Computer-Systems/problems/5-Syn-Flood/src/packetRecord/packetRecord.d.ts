@@ -9,4 +9,5 @@ export type PacketRecord = {
   sentAt: Date;
   byteLength: number;
   addressFamily: AddressFamily;
-} & PacketHeader;
+  packetHeader: PacketHeader;
+};

@@ -47,7 +47,7 @@ const getPacketRecordAtOffset = ({
     sentAt,
     addressFamily,
     byteLength: captureLength + RECORD_HEADER_LENGTH,
-    ...packetHeader,
+    packetHeader,
   };
 };
 
