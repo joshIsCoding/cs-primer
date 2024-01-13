@@ -1,5 +1,5 @@
 import { GetPacketDataAtOffsetArgs } from '../../packetRecord';
-import { SupportedProtocolNumbers, SupportedProtocols } from './packetProtocols';
+import { IpProtocolNumbers, SupportedProtocolNumbers, SupportedProtocols } from './packetProtocols';
 import getTCPSegmentHeader from './tcp/getTCPSegmentHeader';
 import getUnrecognisedPacket from './unrecognised/getUnrecognisedPacket';
 
@@ -7,10 +7,11 @@ interface GetPacketBodyAtOffsetArgs extends GetPacketDataAtOffsetArgs {
   packetProtocol: number;
 }
 
-const supportedProtocolGetters: Record<
-  SupportedProtocolNumbers,
-  (args: GetPacketDataAtOffsetArgs) => SupportedProtocols
-> = {
+type ProtocolGetterReference<T> = {
+  [ProtocolNum in keyof T]: (args: GetPacketDataAtOffsetArgs) => T[ProtocolNum];
+};
+
+const supportedProtocolGetters: ProtocolGetterReference<IpProtocolNumbers> = {
   6: getTCPSegmentHeader,
   255: getUnrecognisedPacket,
 } as const;
