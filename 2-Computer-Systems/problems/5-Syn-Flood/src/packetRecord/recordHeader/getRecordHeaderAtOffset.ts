@@ -1,4 +1,5 @@
 import { Endianness } from '../../pcap/metadata';
+import { GetPacketDataAtOffsetArgs } from '../packetRecord';
 import { RecordHeader } from './recordHeader';
 
 const EPOCH_SECONDS_REL_OFFSET = 0;
@@ -7,9 +8,7 @@ const CAPTURE_LENGTH_REL_OFFSET = EPOCH_SUB_SECONDS_REL_OFFSET + 4;
 const ORIGINAL_LENGTH_REL_OFFSET = CAPTURE_LENGTH_REL_OFFSET + 4;
 export const RECORD_HEADER_LENGTH = ORIGINAL_LENGTH_REL_OFFSET + 4;
 
-interface GetRecordHeaderAtOffsetArgs {
-  pcapBuffer: Buffer;
-  offset: number;
+interface GetRecordHeaderAtOffsetArgs extends GetPacketDataAtOffsetArgs {
   endianness: Endianness;
 }
 
