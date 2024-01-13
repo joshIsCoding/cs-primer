@@ -7,6 +7,7 @@ import getRecordHeaderAtOffset, {
 } from './recordHeader/getRecordHeaderAtOffset';
 import getSentAtDateFromEpoch from './utilities/getSentAtDateFromEpoch';
 import { getlinkLayerHeaderSize } from './linkLayer/linkLayerProtocols';
+import getPacketBodyAtOffset from './payload/packetBody/getPacketBodyAtOffset';
 
 export type GetPacketRecordAtOffsetArgs = PcapMetadata & GetPacketDataAtOffsetArgs;
 
@@ -43,11 +44,19 @@ const getPacketRecordAtOffset = ({
     addressFamily,
   });
 
+  offset += packetHeader.byteLength;
+  const packetBody = getPacketBodyAtOffset({
+    pcapBuffer,
+    offset,
+    packetProtocol: packetHeader.protocol,
+  });
+
   return {
     sentAt,
     addressFamily,
     byteLength: captureLength + RECORD_HEADER_LENGTH,
     packetHeader,
+    packetBody,
   };
 };
 
