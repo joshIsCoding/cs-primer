@@ -5,6 +5,7 @@ interface PacketHeader {
   rawDestination: number;
   sourceIP: string;
   destinationIP: string;
+  byteLength: number;
 }
 
 export default PacketHeader;
