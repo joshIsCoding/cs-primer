@@ -1,26 +1,23 @@
-import { Endianness, SubSecondsType } from '../pcap/metadata';
+import { PcapMetadata } from '../pcap/metadata';
 import getLinkLayerAddressFamily from './linkLayer/getLinkLayerAddressFamily';
-import { PacketRecord } from './packetRecord';
+import { GetPacketDataAtOffsetArgs, PacketRecord } from './packetRecord';
+import getPacketHeaderAtOffset from './payload/packetHeader/getPacketHeaderAtOffset';
 import getRecordHeaderAtOffset, {
   RECORD_HEADER_LENGTH,
 } from './recordHeader/getRecordHeaderAtOffset';
 import getSentAtDateFromEpoch from './utilities/getSentAtDateFromEpoch';
+import { getlinkLayerHeaderSize } from './linkLayer/linkLayerProtocols';
 
-interface GetPacketRecordAtOffsetArgs {
-  pcapBuffer: Buffer;
-  offset: number;
-  endianness: Endianness;
-  linkLayerProtocol: number;
-  subSecondsType: SubSecondsType;
-}
+export type GetPacketRecordAtOffsetArgs = PcapMetadata & GetPacketDataAtOffsetArgs;
 
 const getPacketRecordAtOffset = ({
   pcapBuffer,
-  offset,
+  offset: recordStartOffset,
   endianness,
   subSecondsType,
   linkLayerProtocol,
 }: GetPacketRecordAtOffsetArgs): PacketRecord => {
+  let offset = recordStartOffset;
   const { epochSeconds, epochSubSeconds, captureLength } = getRecordHeaderAtOffset({
     pcapBuffer,
     endianness,
@@ -31,17 +28,26 @@ const getPacketRecordAtOffset = ({
     subSeconds: epochSubSeconds,
     subSecondsType,
   });
+  offset += RECORD_HEADER_LENGTH;
   const addressFamily = getLinkLayerAddressFamily({
     pcapBuffer,
-    recordOffset: offset,
+    offset,
     endianness,
     linkLayerProtocol,
+  });
+
+  offset += getlinkLayerHeaderSize(linkLayerProtocol);
+  const packetHeader = getPacketHeaderAtOffset({
+    pcapBuffer,
+    offset,
+    addressFamily,
   });
 
   return {
     sentAt,
     addressFamily,
     byteLength: captureLength + RECORD_HEADER_LENGTH,
+    ...packetHeader,
   };
 };
 

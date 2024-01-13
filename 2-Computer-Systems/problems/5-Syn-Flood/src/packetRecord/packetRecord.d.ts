@@ -1,4 +1,5 @@
 import { AddressFamily } from './linkLayer/nullLoopback/addressFamilies';
+import PacketHeader from './payload/packetHeader/header';
 
 export interface GetPacketDataAtOffsetArgs {
   pcapBuffer: Buffer;
@@ -8,4 +9,4 @@ export type PacketRecord = {
   sentAt: Date;
   byteLength: number;
   addressFamily: AddressFamily;
-};
+} & PacketHeader;
