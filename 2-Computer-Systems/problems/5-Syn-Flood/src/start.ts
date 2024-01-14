@@ -2,6 +2,8 @@ import { open, readFile } from 'fs/promises';
 import getPCapMetadata from './pcap/getPcapMetadata';
 import getPacketRecordAtOffset from './packetRecord/getPacketRecordAtOffset';
 import { PacketRecord } from './packetRecord/packetRecord';
+import isTCPPacket from './packetRecord/utilities/isTCPPacket';
+import buildTCPConnectionChain from './analysis/tcp/buildTCPConnectionChain';
 
 const FIRST_PACKET_RECORD_OFFSET = 24;
 
@@ -26,7 +28,17 @@ async function start() {
     packetRecordOffset += packetRecord.byteLength;
   }
 
-  console.log(packetRecords);
+  const tcpPacketRecords = packetRecords.filter(isTCPPacket);
+  const tcpConnectionChain = buildTCPConnectionChain(tcpPacketRecords);
+
+  console.log(
+    Object.fromEntries(
+      Object.entries(tcpConnectionChain).map<[string, number]>(([address, packets]) => [
+        address,
+        packets.length,
+      ])
+    )
+  );
   pcapFile.close();
 }
 
