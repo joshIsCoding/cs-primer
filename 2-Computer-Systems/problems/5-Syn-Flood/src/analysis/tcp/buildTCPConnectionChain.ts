@@ -23,12 +23,12 @@ const getAddressPairKey = (packet: PacketRecord<TCPSegmentHeader>): AddressPairK
 
 const buildTCPConnectionChain = (
   packets: PacketRecord<TCPSegmentHeader>[]
-): Record<AddressPairKey, PacketRecord[]> => {
-  const connectionChain: Record<AddressPairKey, PacketRecord[]> = {};
+): Map<AddressPairKey, PacketRecord[]> => {
+  const connectionChain = new Map<AddressPairKey, PacketRecord[]>();
   packets.forEach((packet) => {
     const addressPairKey = getAddressPairKey(packet);
-    const priorPackets = connectionChain[addressPairKey] ?? [];
-    connectionChain[addressPairKey] = [...priorPackets, packet];
+    const priorPackets = connectionChain.get(addressPairKey) ?? [];
+    connectionChain.set(addressPairKey, [...priorPackets, packet]);
   });
 
   return connectionChain;
