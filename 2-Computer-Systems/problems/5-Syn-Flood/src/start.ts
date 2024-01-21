@@ -31,14 +31,9 @@ async function start() {
   const tcpPacketRecords = packetRecords.filter(isTCPPacket);
   const tcpConnectionChain = buildTCPConnectionChain(tcpPacketRecords);
 
-  console.log(
-    Object.fromEntries(
-      Object.entries(tcpConnectionChain).map<[string, number]>(([address, packets]) => [
-        address,
-        packets.length,
-      ])
-    )
-  );
+  tcpConnectionChain.forEach((register, addressPair) => {
+    console.log('Connections per address pair:', addressPair, register.size);
+  });
   pcapFile.close();
 }
 
