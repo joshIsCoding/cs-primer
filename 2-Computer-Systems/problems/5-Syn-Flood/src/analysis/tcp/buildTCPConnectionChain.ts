@@ -1,6 +1,13 @@
 import { PacketRecord } from '../../packetRecord/packetRecord';
 import { TCPSegmentHeader } from '../../packetRecord/payload/packetBody/tcp/tcpSegmentHeader';
-import { Address, AddressPairKey } from './tcpConnectionChain';
+import getTCPHandshakeInfo from './getTCPHandshakeInfo';
+import {
+  Address,
+  AddressPairKey,
+  ConnectionSequenceRegister,
+  TCPConnectionSequence,
+  TCPConnectionsRegister,
+} from './tcpConnectionChain';
 
 const buildAddress = (ip: number, port: number): Address => `${ip}:${port}`;
 
@@ -23,12 +30,19 @@ const getAddressPairKey = (packet: PacketRecord<TCPSegmentHeader>): AddressPairK
 
 const buildTCPConnectionChain = (
   packets: PacketRecord<TCPSegmentHeader>[]
-): Map<AddressPairKey, PacketRecord[]> => {
-  const connectionChain = new Map<AddressPairKey, PacketRecord[]>();
+): TCPConnectionsRegister => {
+  const connectionChain = new Map<AddressPairKey, ConnectionSequenceRegister>();
   packets.forEach((packet) => {
     const addressPairKey = getAddressPairKey(packet);
-    const priorPackets = connectionChain.get(addressPairKey) ?? [];
-    connectionChain.set(addressPairKey, [...priorPackets, packet]);
+    const [initialSequenceNumber, sequenceStep] = getTCPHandshakeInfo(packet.packetBody);
+    const priorConnections =
+      connectionChain.get(addressPairKey) ?? new Map<number, TCPConnectionSequence>();
+    const currentConnection: TCPConnectionSequence =
+      priorConnections.get(initialSequenceNumber) ?? {};
+    currentConnection[sequenceStep] = packet;
+    priorConnections.set(initialSequenceNumber, currentConnection);
+
+    connectionChain.set(addressPairKey, priorConnections);
   });
 
   return connectionChain;

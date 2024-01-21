@@ -1,12 +1,10 @@
 interface TCPConnectionSequence {
-  syn: PacketRecord;
+  syn?: PacketRecord;
   synAck?: PacketRecord;
   ack?: PacketRecord;
 }
 
-type ConnectionSequenceRegister = {
-  [initialSeqNum: number]: TCPConnectionSequence;
-};
+export type ConnectionSequenceRegister = Map<number, TCPConnectionSequence>;
 
 export type Address<Ip = number, Port = number> = `${Ip}:${Port}`;
 
