@@ -6,7 +6,7 @@ import {
   AddressPairKey,
   ConnectionSequenceRegister,
   TCPConnectionSequence,
-  TCPConnectionsRegister,
+  TCPConnectionsLog,
 } from './tcpConnectionChain';
 
 const buildAddress = (ip: number, port: number): Address => `${ip}:${port}`;
@@ -28,24 +28,22 @@ const getAddressPairKey = (packet: PacketRecord<TCPSegmentHeader>): AddressPairK
   return `${destinationAddress}-${sourceAddress}`;
 };
 
-const buildTCPConnectionChain = (
-  packets: PacketRecord<TCPSegmentHeader>[]
-): TCPConnectionsRegister => {
-  const connectionChain = new Map<AddressPairKey, ConnectionSequenceRegister>();
+const buildTCPConnectionLog = (packets: PacketRecord<TCPSegmentHeader>[]): TCPConnectionsLog => {
+  const connectionLog = new Map<AddressPairKey, ConnectionSequenceRegister>();
   packets.forEach((packet) => {
     const addressPairKey = getAddressPairKey(packet);
     const [initialSequenceNumber, sequenceStep] = getTCPHandshakeInfo(packet.packetBody);
     const priorConnections =
-      connectionChain.get(addressPairKey) ?? new Map<number, TCPConnectionSequence>();
+      connectionLog.get(addressPairKey) ?? new Map<number, TCPConnectionSequence>();
     const currentConnection: TCPConnectionSequence =
       priorConnections.get(initialSequenceNumber) ?? {};
     currentConnection[sequenceStep] = packet;
     priorConnections.set(initialSequenceNumber, currentConnection);
 
-    connectionChain.set(addressPairKey, priorConnections);
+    connectionLog.set(addressPairKey, priorConnections);
   });
 
-  return connectionChain;
+  return connectionLog;
 };
 
-export default buildTCPConnectionChain;
+export default buildTCPConnectionLog;

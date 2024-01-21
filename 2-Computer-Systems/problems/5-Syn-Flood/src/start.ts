@@ -3,7 +3,7 @@ import getPCapMetadata from './pcap/getPcapMetadata';
 import getPacketRecordAtOffset from './packetRecord/getPacketRecordAtOffset';
 import { PacketRecord } from './packetRecord/packetRecord';
 import isTCPPacket from './packetRecord/utilities/isTCPPacket';
-import buildTCPConnectionChain from './analysis/tcp/buildTCPConnectionChain';
+import buildTCPConnectionLog from './analysis/tcp/buildTCPConnectionChain';
 
 const FIRST_PACKET_RECORD_OFFSET = 24;
 
@@ -29,9 +29,9 @@ async function start() {
   }
 
   const tcpPacketRecords = packetRecords.filter(isTCPPacket);
-  const tcpConnectionChain = buildTCPConnectionChain(tcpPacketRecords);
+  const tcpConnectionLog = buildTCPConnectionLog(tcpPacketRecords);
 
-  tcpConnectionChain.forEach((register, addressPair) => {
+  tcpConnectionLog.forEach((register, addressPair) => {
     console.log('Connections per address pair:', addressPair, register.size);
   });
   pcapFile.close();

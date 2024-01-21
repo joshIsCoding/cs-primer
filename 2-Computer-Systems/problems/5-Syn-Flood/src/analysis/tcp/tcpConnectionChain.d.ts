@@ -11,4 +11,4 @@ export type Address<Ip = number, Port = number> = `${Ip}:${Port}`;
 // a sorted concatenation of two addresses for grouping any communication between them
 export type AddressPairKey = `${Address}-${Address}`;
 
-export type TCPConnectionsRegister = Map<AddressPairKey, ConnectionSequenceRegister>;
+export type TCPConnectionsLog = Map<AddressPairKey, ConnectionSequenceRegister>;
