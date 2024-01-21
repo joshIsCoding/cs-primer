@@ -3,7 +3,7 @@ import getPCapMetadata from './pcap/getPcapMetadata';
 import getPacketRecordAtOffset from './packetRecord/getPacketRecordAtOffset';
 import { PacketRecord } from './packetRecord/packetRecord';
 import isTCPPacket from './packetRecord/utilities/isTCPPacket';
-import buildTCPConnectionLog from './analysis/tcp/buildTCPConnectionChain';
+import buildTCPConnectionLog from './analysis/tcp/buildTCPConnectionLog';
 
 const FIRST_PACKET_RECORD_OFFSET = 24;
 

@@ -4,7 +4,7 @@ import {
   SynTCPSegmentHeader,
   TCPSegmentHeader,
 } from '../../packetRecord/payload/packetBody/tcp/tcpSegmentHeader';
-import { TCPConnectionSequence } from './tcpConnectionChain';
+import { TCPConnectionSequence } from './tcpConnectionLog';
 
 type TCPHandhsakeInfo<
   InitialSequenceNumber = number,
