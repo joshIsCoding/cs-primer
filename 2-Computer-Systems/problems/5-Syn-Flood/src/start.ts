@@ -31,9 +31,43 @@ async function start() {
   const tcpPacketRecords = packetRecords.filter(isTCPPacket);
   const tcpConnectionLog = buildTCPConnectionLog(tcpPacketRecords);
 
-  tcpConnectionLog.forEach((register, addressPair) => {
-    console.log('Connections per address pair:', addressPair, register.size);
+  const timingsFile = await open('synAckLatencies.csv', 'w');
+
+  let connectionsSyned = 0;
+  let connectionsSynAcked = 0;
+  let connectionsAcked = 0;
+
+  tcpConnectionLog.forEach((register, _addressPair) => {
+    register.forEach(async (handshakeSequence, _initialSeqNum) => {
+      let synSentAt;
+      let synAckSentAt;
+      if (handshakeSequence.syn) {
+        connectionsSyned++;
+        synSentAt = handshakeSequence.syn.sentAt;
+      }
+      if (handshakeSequence.synAck) {
+        connectionsSynAcked++;
+        synAckSentAt = handshakeSequence.synAck.sentAt;
+      }
+      if (handshakeSequence.ack) connectionsAcked++;
+
+      if (synSentAt) {
+        await timingsFile.write(
+          `${synSentAt.toISOString()},${
+            synAckSentAt ? synAckSentAt.getTime() - synSentAt.getTime() : ''
+          }\n`
+        );
+      }
+    });
   });
+  console.log('Connections SYN-ed:', connectionsSyned);
+  console.log(
+    'Of which SYN-ACK-ed:',
+    `${((connectionsSynAcked / connectionsSyned) * 100).toFixed(1)}%`
+  );
+  console.log('Connections ACKed:', `${connectionsAcked.toFixed(1)}%`);
+  console.log('\n=> SYN-ACK latencies saved to `synAckLatency.csv`');
+  timingsFile.close();
   pcapFile.close();
 }
 
