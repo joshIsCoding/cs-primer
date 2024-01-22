@@ -1,7 +1,9 @@
+import { PacketRecord } from '../../packetRecord/packetRecord';
+import { TCPSegmentHeader } from '../../packetRecord/payload/packetBody/tcp/tcpSegmentHeader';
 interface TCPConnectionSequence {
-  syn?: PacketRecord;
-  synAck?: PacketRecord;
-  ack?: PacketRecord;
+  syn?: PacketRecord<TCPSegmentHeader>;
+  synAck?: PacketRecord<TCPSegmentHeader>;
+  ack?: PacketRecord<TCPSegmentHeader>;
 }
 
 export type ConnectionSequenceRegister = Map<number, TCPConnectionSequence>;
