@@ -11,6 +11,6 @@ const getSentAtDateFromEpoch = ({
   subSeconds,
   subSecondsType,
 }: GetSentAtDateFromEpochArgs): Date =>
-  new Date(seconds * 1000 + subSeconds / (subSecondsType === 'micro' ? 1 : 1000));
+  new Date(seconds * 1000 + subSeconds / (subSecondsType === 'micro' ? 1000 : 1000000));
 
 export default getSentAtDateFromEpoch;
