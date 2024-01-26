@@ -1,0 +1,6 @@
+1. Parse the first byte of the first example line - it's the required truncation length (ie the number of bytes)
+2. Use the line break carriage return encoding (I'm presuming this matches the ASCII encoding) to find all the example lines
+3. Parse all trunctation bytes for each line.
+4. Figure out the character boundary designation in UTF-8
+5. Apply truncation by chopping off characters upto the last full character that exists within the required byte length
+6. Iterate through the example lines to generate your output, then compare your output to the expectation file using `diff`
