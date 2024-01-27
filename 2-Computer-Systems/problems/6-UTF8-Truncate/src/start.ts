@@ -6,32 +6,44 @@ const assertSingleByte = (byte: number): void => {
   }
 };
 
-const isSingleByteChar = (byte: number): boolean => {
+type ByteCharPredicate = (byte: number) => boolean;
+
+const isSingleByteChar: ByteCharPredicate = (byte) => {
   assertSingleByte(byte);
 
   // MSB as follows: 0xxxxxxx
   return (byte & 128) === 0;
 };
 
-const isContinuationByte = (byte: number): boolean => {
+const isContinuationByte: ByteCharPredicate = (byte) => {
   assertSingleByte(byte);
 
   // MSB as follows: 10xxxxxx
   return (byte & 192) === 128;
 };
 
-const isFirstByteOfMulti = (byte: number): boolean => {
+const isFirstByteOfMulti: ByteCharPredicate = (byte) =>
+  isFirstOf2ByteChar(byte) || isFirstOf3ByteChar(byte) || isFirstOf4ByteChar(byte);
+
+const isFirstOf2ByteChar: ByteCharPredicate = (byte) => {
   assertSingleByte(byte);
 
-  // most significant bits match any of the following:
-  return (
-    // 110xxxxx
-    (byte & 224) === 192 ||
-    // 1110xxxx
-    (byte & 240) === 224 ||
-    // 11110xxx
-    (byte & 248) === 240
-  );
+  //  most significant bits match 110xxxxx
+  return (byte & 224) === 192;
+};
+
+const isFirstOf3ByteChar: ByteCharPredicate = (byte) => {
+  assertSingleByte(byte);
+
+  //  most significant bits match 1110xxxx
+  return (byte & 240) === 224;
+};
+
+const isFirstOf4ByteChar: ByteCharPredicate = (byte) => {
+  assertSingleByte(byte);
+
+  //  most significant bits match 11110xxx
+  return (byte & 248) === 240;
 };
 
 const DEBUG_LENGTH = 29;
