@@ -2,24 +2,23 @@ import { open } from 'fs/promises';
 
 const runCaseFileTruncation = async () => {
   const caseFile = await open('helpfiles/cases', 'r');
-  const lineBuffers: Buffer[] = [];
-  const caseStream = caseFile.createReadStream();
-  caseStream.on('readable', function () {
-    let currentByte: Buffer | undefined | null;
-    // let currentLine = Buffer.from([])
-    while (currentByte !== null) {
-      currentByte = caseStream.read(1);
-      if (!currentByte) continue;
+  const caseLines: Buffer[] = [];
+  const fileBuffer = await caseFile.readFile();
 
-      if (currentByte.readInt8() === 10) {
-        console.log('New line char found!');
-      }
+  let lastEOLOffset = 0;
+  let currentByteOffset = 0;
+  for (const currentByte of fileBuffer) {
+    if (currentByte === 10) {
+      // chop off the line-feed char
+      caseLines.push(fileBuffer.subarray(lastEOLOffset, currentByteOffset));
+      lastEOLOffset = currentByteOffset;
     }
-  });
-  caseStream.on('end', async function () {
-    console.log('Closing stream');
-    await caseFile.close();
-  });
+    currentByteOffset++;
+  }
+
+  caseLines.forEach((buf) => console.log(buf.toString('utf8')));
+
+  await caseFile.close();
 };
 
 runCaseFileTruncation();
