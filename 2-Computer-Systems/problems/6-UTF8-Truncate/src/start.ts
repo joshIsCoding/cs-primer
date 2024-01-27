@@ -6,11 +6,17 @@ const runCaseFileTruncation = async () => {
   const fileBuffer = await caseFile.readFile();
 
   let lastEOLOffset = 0;
+  let bytesToTruncate: number | null = null;
   let currentByteOffset = 0;
   for (const currentByte of fileBuffer) {
+    if (bytesToTruncate === null || lastEOLOffset + 1 === currentByteOffset) {
+      bytesToTruncate = currentByte;
+    }
+
     if (currentByte === 10) {
-      // chop off the line-feed char
-      caseLines.push(fileBuffer.subarray(lastEOLOffset, currentByteOffset));
+      console.log(bytesToTruncate);
+      // chop off the line-feed char and 'bytes to truncate' target
+      caseLines.push(fileBuffer.subarray(lastEOLOffset + 1, currentByteOffset));
       lastEOLOffset = currentByteOffset;
     }
     currentByteOffset++;
