@@ -1,28 +1,95 @@
 import { open } from 'fs/promises';
 
+const assertSingleByte = (byte: number): void => {
+  if (byte > 255 || byte < 0) {
+    throw new Error(`Argument ${byte} is not a single byte`);
+  }
+};
+
+const isSingleByteChar = (byte: number): boolean => {
+  assertSingleByte(byte);
+
+  // MSB as follows: 0xxxxxxx
+  return (byte & 128) === 0;
+};
+
+const isContinuationByte = (byte: number): boolean => {
+  assertSingleByte(byte);
+
+  // MSB as follows: 10xxxxxx
+  return (byte & 192) === 128;
+};
+
+const isFirstByteOfMulti = (byte: number): boolean => {
+  assertSingleByte(byte);
+
+  // most significant bits match any of the following:
+  return (
+    // 110xxxxx
+    (byte & 224) === 192 ||
+    // 1110xxxx
+    (byte & 240) === 224 ||
+    // 11110xxx
+    (byte & 248) === 240
+  );
+};
+
+const DEBUG_LENGTH = 29;
+const safelyTruncateUTF8Buffer = (utf8Buffer: Buffer, targetByteLength: number): Buffer => {
+  const maxLengthBuffer = utf8Buffer.subarray(0, targetByteLength);
+
+  if (targetByteLength === 0) return maxLengthBuffer;
+
+  for (let offsetFromEnd = maxLengthBuffer.byteLength - 1; offsetFromEnd >= 0; offsetFromEnd--) {
+    const currentByte = maxLengthBuffer[offsetFromEnd];
+    if (isSingleByteChar(currentByte)) return maxLengthBuffer;
+
+    // chop off the start of a multi-byte char
+    if (isFirstByteOfMulti(currentByte)) return maxLengthBuffer.subarray(0, offsetFromEnd);
+
+    if (!isContinuationByte(currentByte)) {
+      throw new Error(`Unrecognised UTF-8 byte: ${currentByte}`);
+    }
+  }
+
+  throw new Error(`No first or single UTF-8 bytes found`);
+};
+
 const runCaseFileTruncation = async () => {
   const caseFile = await open('helpfiles/cases', 'r');
-  const caseLines: Buffer[] = [];
+  const truncatedLines: Array<[number, Buffer, Buffer]> = [];
   const fileBuffer = await caseFile.readFile();
 
-  let lastEOLOffset = 0;
-  let bytesToTruncate: number | null = null;
+  let lastEOLOffset: number | undefined = undefined;
+  let bytesToTruncate: number | undefined = undefined;
   let currentByteOffset = 0;
   for (const currentByte of fileBuffer) {
-    if (bytesToTruncate === null || lastEOLOffset + 1 === currentByteOffset) {
+    if (
+      bytesToTruncate === undefined ||
+      (lastEOLOffset !== undefined && lastEOLOffset + 1 === currentByteOffset)
+    ) {
       bytesToTruncate = currentByte;
     }
 
+    // line-feed character
     if (currentByte === 10) {
-      console.log(bytesToTruncate);
-      // chop off the line-feed char and 'bytes to truncate' target
-      caseLines.push(fileBuffer.subarray(lastEOLOffset + 1, currentByteOffset));
+      // skip up to 2 bytes - one for any previous EOL and one for the truncation integer
+      const startSlice = lastEOLOffset === undefined ? 1 : lastEOLOffset + 2;
+      const lineToTruncate = fileBuffer.subarray(startSlice, currentByteOffset);
+      truncatedLines.push([
+        bytesToTruncate,
+        lineToTruncate,
+        safelyTruncateUTF8Buffer(lineToTruncate, bytesToTruncate),
+      ]);
       lastEOLOffset = currentByteOffset;
     }
     currentByteOffset++;
   }
 
-  caseLines.forEach((buf) => console.log(buf.toString('utf8')));
+  truncatedLines.forEach(([len, orig, buf]) => {
+    // if (len !== DEBUG_LENGTH) return;
+    console.log(len, '-', orig.toString('utf8'), '-', buf.toString('utf8'));
+  });
 
   await caseFile.close();
 };
