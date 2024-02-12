@@ -63,18 +63,13 @@ const getIndexOfFirstByteOfLastChar = (bytes: Buffer): number => {
 };
 
 const safelyTruncateUTF8Buffer = (untruncatedBuffer: Buffer, targetByteLength: number): Buffer => {
-  const minimallyTruncatedBuffer = untruncatedBuffer.subarray(0, targetByteLength);
-  const firstTruncatedByte = untruncatedBuffer[targetByteLength];
+  const maxBufferLength = Math.min(untruncatedBuffer.byteLength, targetByteLength);
+  const truncatedBuffer = Buffer.alloc(maxBufferLength + 1);
+  untruncatedBuffer.copy(truncatedBuffer);
+  // this length will always be <= targetByteLength
+  const safeBufferLength = getIndexOfFirstByteOfLastChar(truncatedBuffer);
 
-  if (isFirstByteOfChar(firstTruncatedByte) || targetByteLength === 0)
-    return minimallyTruncatedBuffer;
-
-  const safeBufferLength = Math.min(
-    getIndexOfFirstByteOfLastChar(minimallyTruncatedBuffer),
-    minimallyTruncatedBuffer.byteLength
-  );
-
-  return minimallyTruncatedBuffer.subarray(0, safeBufferLength);
+  return truncatedBuffer.subarray(0, safeBufferLength);
 };
 
 const runCaseFileTruncation = async () => {
