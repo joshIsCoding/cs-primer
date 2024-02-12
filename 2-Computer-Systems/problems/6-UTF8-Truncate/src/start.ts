@@ -8,13 +8,6 @@ const assertSingleByte = (byte: number): void => {
 
 type ByteCharPredicate = (byte: number) => boolean;
 
-const isSingleByteChar: ByteCharPredicate = (byte) => {
-  assertSingleByte(byte);
-
-  // MSB as follows: 0xxxxxxx
-  return (byte & 128) === 0;
-};
-
 const isContinuationByte: ByteCharPredicate = (byte) => {
   assertSingleByte(byte);
 
@@ -22,8 +15,12 @@ const isContinuationByte: ByteCharPredicate = (byte) => {
   return (byte & 192) === 128;
 };
 
-const isFirstByteOfMulti: ByteCharPredicate = (byte) =>
-  isFirstOf2ByteChar(byte) || isFirstOf3ByteChar(byte) || isFirstOf4ByteChar(byte);
+const isSingleByteChar: ByteCharPredicate = (byte) => {
+  assertSingleByte(byte);
+
+  // MSB as follows: 0xxxxxxx
+  return (byte & 128) === 0;
+};
 
 const isFirstOf2ByteChar: ByteCharPredicate = (byte) => {
   assertSingleByte(byte);
@@ -46,25 +43,34 @@ const isFirstOf4ByteChar: ByteCharPredicate = (byte) => {
   return (byte & 248) === 240;
 };
 
-const DEBUG_LENGTH = 29;
-const safelyTruncateUTF8Buffer = (utf8Buffer: Buffer, targetByteLength: number): Buffer => {
-  const maxLengthBuffer = utf8Buffer.subarray(0, targetByteLength);
+const getIndexOfFirstByteOfLastChar = (bytes: Buffer): number => {
+  for (let invertedIndex = 0; invertedIndex < 4; invertedIndex++) {
+    const i = bytes.byteLength - invertedIndex - 1;
+    const currentByte = bytes[i];
+    if (isContinuationByte(currentByte)) continue;
 
-  if (targetByteLength === 0) return maxLengthBuffer;
+    if (isSingleByteChar(currentByte)) return i;
 
-  for (let offsetFromEnd = maxLengthBuffer.byteLength - 1; offsetFromEnd >= 0; offsetFromEnd--) {
-    const currentByte = maxLengthBuffer[offsetFromEnd];
-    if (isSingleByteChar(currentByte)) return maxLengthBuffer;
+    if (isFirstOf2ByteChar(currentByte) && invertedIndex > 0) return i;
 
-    // chop off the start of a multi-byte char
-    if (isFirstByteOfMulti(currentByte)) return maxLengthBuffer.subarray(0, offsetFromEnd);
+    if (isFirstOf3ByteChar(currentByte) && invertedIndex > 1) return i;
 
-    if (!isContinuationByte(currentByte)) {
-      throw new Error(`Unrecognised UTF-8 byte: ${currentByte}`);
-    }
+    if (isFirstOf4ByteChar(currentByte) && invertedIndex > 2) return i;
   }
+  throw new Error(`No UTF-8 first bytes found in ${bytes}`);
+};
 
-  throw new Error(`No first or single UTF-8 bytes found`);
+const safelyTruncateUTF8Buffer = (untruncatedBuffer: Buffer, targetByteLength: number): Buffer => {
+  const minimallyTruncatedBuffer = untruncatedBuffer.subarray(0, targetByteLength);
+
+  if (targetByteLength === 0) return minimallyTruncatedBuffer;
+
+  const safeBufferLength = Math.min(
+    getIndexOfFirstByteOfLastChar(minimallyTruncatedBuffer),
+    minimallyTruncatedBuffer.byteLength
+  );
+
+  return minimallyTruncatedBuffer.subarray(0, safeBufferLength);
 };
 
 const runCaseFileTruncation = async () => {
@@ -99,8 +105,13 @@ const runCaseFileTruncation = async () => {
   }
 
   truncatedLines.forEach(([len, orig, buf]) => {
-    // if (len !== DEBUG_LENGTH) return;
-    console.log(len, '-', orig.toString('utf8'), '-', buf.toString('utf8'));
+    console.log(
+      len.toString().padEnd(3),
+      '-',
+      orig.toString('utf8').padEnd(30),
+      '-',
+      buf.toString('utf8')
+    );
   });
 
   await caseFile.close();
