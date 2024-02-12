@@ -43,6 +43,11 @@ const isFirstOf4ByteChar: ByteCharPredicate = (byte) => {
   return (byte & 248) === 240;
 };
 
+const isFirstByteOfChar: ByteCharPredicate = (byte) =>
+  [isSingleByteChar, isFirstOf2ByteChar, isFirstOf3ByteChar, isFirstOf4ByteChar].some((predicate) =>
+    predicate(byte)
+  );
+
 const getIndexOfFirstByteOfLastChar = (bytes: Buffer): number => {
   for (let invertedIndex = 0; invertedIndex < 4; invertedIndex++) {
     const i = bytes.byteLength - invertedIndex - 1;
@@ -62,8 +67,10 @@ const getIndexOfFirstByteOfLastChar = (bytes: Buffer): number => {
 
 const safelyTruncateUTF8Buffer = (untruncatedBuffer: Buffer, targetByteLength: number): Buffer => {
   const minimallyTruncatedBuffer = untruncatedBuffer.subarray(0, targetByteLength);
+  const firstTruncatedByte = untruncatedBuffer[targetByteLength];
 
-  if (targetByteLength === 0) return minimallyTruncatedBuffer;
+  if (isFirstByteOfChar(firstTruncatedByte) || targetByteLength === 0)
+    return minimallyTruncatedBuffer;
 
   const safeBufferLength = Math.min(
     getIndexOfFirstByteOfLastChar(minimallyTruncatedBuffer),
@@ -105,13 +112,7 @@ const runCaseFileTruncation = async () => {
   }
 
   truncatedLines.forEach(([len, orig, buf]) => {
-    console.log(
-      len.toString().padEnd(3),
-      '-',
-      orig.toString('utf8').padEnd(30),
-      '-',
-      buf.toString('utf8')
-    );
+    console.log(buf.toString('utf8'));
   });
 
   await caseFile.close();
