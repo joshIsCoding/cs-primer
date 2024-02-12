@@ -11,45 +11,23 @@ const assertSingleByte = (byte: number): void => {
 
 type ByteCharPredicate = (byte: number) => boolean;
 
-const isContinuationByte: ByteCharPredicate = (byte) => {
+const isContinuationByte: ByteCharPredicate = (byte) => (byte & 0xc0) === 0x80;
+
+const isSingleByteChar: ByteCharPredicate = (byte) => (byte & 0x80) === 0;
+
+const isFirstOf2ByteChar: ByteCharPredicate = (byte) => (byte & 0xe0) === 0xc0;
+
+const isFirstOf3ByteChar: ByteCharPredicate = (byte) => (byte & 0xf0) === 0xe0;
+
+const isFirstOf4ByteChar: ByteCharPredicate = (byte) => (byte & 0xf8) === 0xf0;
+
+const isFirstByteOfChar: ByteCharPredicate = (byte) => {
   assertSingleByte(byte);
 
-  // MSB as follows: 10xxxxxx
-  return (byte & 192) === 128;
-};
-
-const isSingleByteChar: ByteCharPredicate = (byte) => {
-  assertSingleByte(byte);
-
-  // MSB as follows: 0xxxxxxx
-  return (byte & 128) === 0;
-};
-
-const isFirstOf2ByteChar: ByteCharPredicate = (byte) => {
-  assertSingleByte(byte);
-
-  //  most significant bits match 110xxxxx
-  return (byte & 224) === 192;
-};
-
-const isFirstOf3ByteChar: ByteCharPredicate = (byte) => {
-  assertSingleByte(byte);
-
-  //  most significant bits match 1110xxxx
-  return (byte & 240) === 224;
-};
-
-const isFirstOf4ByteChar: ByteCharPredicate = (byte) => {
-  assertSingleByte(byte);
-
-  //  most significant bits match 11110xxx
-  return (byte & 248) === 240;
-};
-
-const isFirstByteOfChar: ByteCharPredicate = (byte) =>
-  [isSingleByteChar, isFirstOf2ByteChar, isFirstOf3ByteChar, isFirstOf4ByteChar].some((predicate) =>
-    predicate(byte)
+  return [isSingleByteChar, isFirstOf2ByteChar, isFirstOf3ByteChar, isFirstOf4ByteChar].some(
+    (predicate) => predicate(byte)
   );
+};
 
 const getIndexOfFirstByteOfLastChar = (bytes: Buffer): number => {
   for (let invertedIndex = 0; invertedIndex < 4; invertedIndex++) {
