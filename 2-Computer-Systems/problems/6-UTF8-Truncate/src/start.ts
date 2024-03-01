@@ -30,17 +30,15 @@ const isFirstByteOfChar: ByteCharPredicate = (byte) => {
 };
 
 const getIndexOfFirstByteOfLastChar = (bytes: Buffer): number => {
-  for (let invertedIndex = 0; invertedIndex < 4; invertedIndex++) {
-    const i = bytes.byteLength - invertedIndex - 1;
+  for (let i = bytes.byteLength - 1; i >= bytes.byteLength - 5; i--) {
     const currentByte = bytes[i];
-    if (isContinuationByte(currentByte)) continue;
 
     if (isFirstByteOfChar(currentByte)) return i;
   }
   throw new Error(`No UTF-8 first bytes found in ${bytes}`);
 };
 
-const safelyTruncateUTF8Buffer = (untruncatedBuffer: Buffer, targetByteLength: number): Buffer => {
+const truncateUTF8Buffer = (untruncatedBuffer: Buffer, targetByteLength: number): Buffer => {
   const maxBufferLength = Math.min(untruncatedBuffer.byteLength, targetByteLength);
   const truncatedBuffer = Buffer.alloc(maxBufferLength + 1);
   untruncatedBuffer.copy(truncatedBuffer);
@@ -71,7 +69,7 @@ const runCaseFileTruncation = async () => {
       // skip up to 2 bytes - one for any previous EOL and one for the truncation integer
       const startSlice = lastEOLOffset === undefined ? 1 : lastEOLOffset + 2;
       const lineToTruncate = fileBuffer.subarray(startSlice, currentByteOffset);
-      truncatedLines.push(safelyTruncateUTF8Buffer(lineToTruncate, bytesToTruncate));
+      truncatedLines.push(truncateUTF8Buffer(lineToTruncate, bytesToTruncate));
       truncatedLines.push(Buffer.from([LINE_FEED_CHAR]));
       lastEOLOffset = currentByteOffset;
     }
