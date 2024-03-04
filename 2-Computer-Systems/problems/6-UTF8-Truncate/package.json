@@ -14,7 +14,7 @@
     "typescript": "^5.2.2"
   },
   "scripts": {
-    "start": "ts-node src/start.ts",
+    "start": "ts-node src/start.ts | head -n 13 | tail -n 11 | diff helpfiles/expected -",
     "dev:start": "nodemon src/start.ts"
   }
 }
