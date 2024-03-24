@@ -104,8 +104,15 @@ function isASCIIChar(char: string): char is ASCIIChar {
 }
 
 // Non-ASCII chars are treated as spaces.
-function getASCIICode(char: string): ASCIICode {
+export function getASCIICode(char: string): ASCIICode {
   return isASCIIChar(char) ? ASCII_TABLE[char] : ASCII_TABLE[' '];
 }
 
+export function getASCIIChar(targetASCIICode: number): ASCIIChar {
+  for (const [char, asciiCode] of Object.entries(ASCII_TABLE)) {
+    if (asciiCode === targetASCIICode && isASCIIChar(char)) return char;
+  }
+
+  throw new Error(`${targetASCIICode} is not a supported ASCII character`);
+}
 export default getASCIICode;

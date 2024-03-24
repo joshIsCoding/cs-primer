@@ -1,4 +1,4 @@
-import getASCIICode from './asciiTable';
+import { getASCIICode } from './asciiTable';
 
 function getASCIICodes(string: string): number[] {
   return string.split('').map(getASCIICode);
