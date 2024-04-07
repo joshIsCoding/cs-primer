@@ -2,13 +2,21 @@ import getASCIICodes from './ascii/getASCIICodes';
 import getStringFromASCIICodes from './ascii/getStringFromASCIICodes';
 import getASCIIFromBitVectorInt from './ascii/bitVector/getASCIIFromBitVectorInt';
 import getBitVectorIntFromASCII from './ascii/bitVector/getBitVectorIntFromASCII';
+import buildNaN from './nan/buildNan';
+import parseNaN from './nan/parseNaN';
 
-function encode(message: string): bigint {
-  return getBitVectorIntFromASCII(getASCIICodes(message));
+function encode(message: string): number {
+  const asciiSeq = getASCIICodes(message);
+  const bitVector = getBitVectorIntFromASCII(asciiSeq);
+
+  return buildNaN(bitVector);
 }
 
-function decode(bitVectorInt: bigint): string {
-  return getStringFromASCIICodes(getASCIIFromBitVectorInt(bitVectorInt));
+function decode(nan: number): string {
+  const bitVector = parseNaN(nan);
+  const asciiSeq = getASCIIFromBitVectorInt(bitVector);
+
+  return getStringFromASCIICodes(asciiSeq);
 }
 
 const hey = 'HEYA!';
