@@ -96,11 +96,17 @@ const ASCII_TABLE = {
   '~': 126,
 } as const;
 
+const ASCI_VALUES = Object.values(ASCII_TABLE);
+
 type ASCIIChar = keyof typeof ASCII_TABLE;
-type ASCIICode = (typeof ASCII_TABLE)[ASCIIChar];
+export type ASCIICode = (typeof ASCII_TABLE)[ASCIIChar];
 
 function isASCIIChar(char: string): char is ASCIIChar {
   return char in ASCII_TABLE;
+}
+
+export function isASCIICode(code: number): code is ASCIICode {
+  return ASCI_VALUES.includes(code as ASCIICode);
 }
 
 // Non-ASCII chars are treated as spaces.
