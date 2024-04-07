@@ -1,4 +1,4 @@
-import { MAX_MANTISSA } from './buildNan';
+import { MAX_MANTISSA } from './buildNaN';
 
 const parseNaN = (nan: number): bigint => {
   if (!isNaN(nan)) {

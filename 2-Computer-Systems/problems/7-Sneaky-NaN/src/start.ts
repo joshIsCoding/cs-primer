@@ -2,7 +2,7 @@ import getASCIICodes from './ascii/getASCIICodes';
 import getStringFromASCIICodes from './ascii/getStringFromASCIICodes';
 import getASCIIFromBitVectorInt from './ascii/bitVector/getASCIIFromBitVectorInt';
 import getBitVectorIntFromASCII from './ascii/bitVector/getBitVectorIntFromASCII';
-import buildNaN from './nan/buildNan';
+import buildNaN from './nan/buildNaN';
 import parseNaN from './nan/parseNaN';
 
 function encode(message: string): number {
