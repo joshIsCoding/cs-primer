@@ -3,23 +3,28 @@ import getStringFromASCIICodes from './ascii/getStringFromASCIICodes';
 import getASCIIFromBitVectorInt from './ascii/bitVector/getASCIIFromBitVectorInt';
 import getBitVectorIntFromASCII from './ascii/bitVector/getBitVectorIntFromASCII';
 import buildNaN from './nan/buildNaN';
-import parseNaN from './nan/parseNaN';
+import parseNaN, { parseNaNAsUTF8 } from './nan/parseNaN';
+import getUTF8Buffer from './utf8/getUTF8Buffer';
 
 function conceal(message: string): number {
-  const asciiSeq = getASCIICodes(message);
-  const bitVector = getBitVectorIntFromASCII(asciiSeq);
+  // const asciiSeq = getASCIICodes(message);
+  // const bitVector = getBitVectorIntFromASCII(asciiSeq);
+  const messageBuffer = getUTF8Buffer(message);
 
-  return buildNaN(bitVector);
+  return buildNaN(messageBuffer);
 }
 
 function extract(nan: number): string {
-  const bitVector = parseNaN(nan);
-  const asciiSeq = getASCIIFromBitVectorInt(bitVector);
+  // const bitVector = parseNaN(nan);
+  // const asciiSeq = getASCIIFromBitVectorInt(bitVector);
 
-  return getStringFromASCIICodes(asciiSeq);
+  // return getStringFromASCIICodes(asciiSeq);
+
+  return parseNaNAsUTF8(nan);
 }
 
-const testMsg = 'ïœßïœßïœß';
+// const testMsg = 'ïœßïœßïœß';
+const testMsg = 'smarts';
 
 console.log('Input:  ', `\`${testMsg}\``);
 console.log('Encoded:', conceal(testMsg));
