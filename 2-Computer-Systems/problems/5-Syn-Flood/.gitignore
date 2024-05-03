@@ -1,0 +1,4 @@
+# Latency output files
+*.csv
+# crude latency analysis
+*.numbers

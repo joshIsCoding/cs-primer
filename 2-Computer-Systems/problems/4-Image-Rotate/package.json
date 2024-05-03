@@ -1,0 +1,20 @@
+{
+  "name": "BMPImageRotate",
+  "version": "1.0.0",
+  "description": "Transforms bitmap image files by rotating the image 90 degrees clockwise.",
+  "main": "output/start.js",
+  "repository": "https://github.com/joshIsCoding/cs-primer",
+  "author": "Josh Brown",
+  "license": "private",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^20.8.10",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "start": "ts-node src/start.ts",
+    "dev:start": "nodemon src/start.ts"
+  }
+}

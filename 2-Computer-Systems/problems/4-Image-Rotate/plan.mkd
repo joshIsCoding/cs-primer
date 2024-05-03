@@ -1,0 +1,31 @@
+# Image Rotation
+
+## Proposed Steps
+
+1. Figure out how to pass the file.
+	1. Start with the first couple of bytes.
+	2. Next, ascertain how each pixel is encoded.
+	3. Then try to find the dimensions.
+	4. Finally, figure out the row structure.
+2. Read the entire file into memory and extract the pixel data into some convenient structure.
+3. Rotate the pixels within a square image (into a new structure).
+	- consider dividing the image into quadrants, then making 4 in-place swaps for each quadrant for every pixel within the quadrant. This would, of course, present edge-cases that would need to be considered.
+	- on the other hand, this might be the only sane and complete way to conduct the rotation.
+4. Refactor the code.
+5. Rework the logic to handle non-square images.
+6. Refactor once again.
+
+## Notes
+Excluding what must be the file header, there is slightly more bytes in the .bmp file than the total number of pixels in the image multiplied by 3 (a byte each for R, G and B). This bodes well. 
+
+The following format string yields the the signature, dimensions and pixel-array offset from the BMP header!
+
+```C
+1/2 "Signature: %02X\n" 1/4 "File Size: %04u\n" /4 "Reserved: %04X\n" /4 "Pixel-array offset: %4u\n" /4 "Header bytes: %4u\n" "Dimensions: %4u x %4u \n" 
+
+```
+
+The pixels are stored as an array starting at the byte-offset. The rows and columns can be determined by the image dimensions. The format specifies a bits per pixel value which determines the overall size of the pixel array (and bytes per row, etc.). Confusingly (or otherwise), each row has padding of up to 3 bytes to ensure the rows are multiples of 4 bytes. But it's worth noting that the initial helpfile example would indeed have rows that are multiples of 4 (420 * 3 bpp = 1260 = 315 * 4). 
+
+There's also an image size entry in the header which would yield the required size of your pixel buffer in bytes, presumably.
+

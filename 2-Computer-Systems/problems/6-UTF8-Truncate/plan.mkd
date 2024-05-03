@@ -1,0 +1,10 @@
+1. Parse the first byte of the first example line - it's the required truncation length (ie the number of bytes)
+2. Use the line break carriage return encoding (I'm presuming this matches the ASCII encoding) to find all the example lines
+  - Interestingly in the examples, this seems to be exclusvely the 0x0a 'line feed' character, rather than the carriage return 0x0d.
+  - Looks like there are some historical variations by operating system as to which new line characters (in combination or isolation) were required.
+  - Unix systems seem to rely upon 0x0a.
+  - A 'carriage return' is the process of moving the cursor to the start of a line. A 'line feed' is the process of moving vertically to the next line. This two-step process harks from the typewriter days when beginning a new line required these two distinct steps.
+3. Parse all trunctation bytes for each line.
+4. Figure out the character boundary designation in UTF-8
+5. Apply truncation by chopping off characters upto the last full character that exists within the required byte length
+6. Iterate through the example lines to generate your output, then compare your output to the expectation file using `diff`
