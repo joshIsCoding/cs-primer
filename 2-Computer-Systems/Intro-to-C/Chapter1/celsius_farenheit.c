@@ -1,36 +1,37 @@
 #include <stdio.h>
 
+// Fahrenheit constants
+#define   LOWER_F   0     /* lower bound */
+#define   UPPER_F   300   /* upper bound */
+#define   STEP_F    20    /* step size */
+
+// Celsius constants
+#define   LOWER_C   -20     /* lower bound */
+#define   UPPER_C   150   /* upper bound */
+#define   STEP_C    10    /* step size */
+
 /* Prints tables of values reflecting the corresponding temperatures in degrees
    Fahrenheit and Celsius */
 int main() {
   float fahren, celsius; // temperature values in fahrenheit and celsius
-  int lower, upper, step;
 
-  lower = 0; // lower bound for fahrenheit
-  upper = 300; // upper bound for fahrenheit
-  step = 20; // increment for each row of table
+  fahren = LOWER_F;
 
-  fahren = lower;
-
-  printf("Fahrenheit - Celsius (%dF to %dF)\n", lower, upper);
+  printf("Fahrenheit - Celsius (%dF to %dF)\n", LOWER_F, UPPER_F);
   printf("---------------------------------\n");
 
-  while(fahren <= upper) {
+  while(fahren <= UPPER_F) {
     celsius = (5.0/9.0) * (fahren - 32.0);
 
     printf("%3.0f\t%6.1f\n", fahren, celsius);
-    fahren += step;
+    fahren += STEP_F;
   }
 
   /* Print the inverse conversion */
 
-  lower = -20; // lower bound for celsius
-  upper = 150; // upper bound for celsius
-  step = 10; // increment for each row
-
-  printf("\n\nCelsius - Fahrenheit (%dC to %dC)\n", upper, lower);
+  printf("\n\nCelsius - Fahrenheit (%dC to %dC)\n", UPPER_C, LOWER_C);
   printf("---------------------------------\n");
 
-  for(celsius = upper; celsius >= lower; celsius -= step)
+  for(celsius = UPPER_C; celsius >= LOWER_C; celsius -= STEP_C)
     printf("%3.0f\t%6.1f\n", celsius, (9.0/5.0) * celsius + 32.0);
 }
