@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-/* Prints a table of values reflecting the corresponding temperatures in degrees
+/* Prints tables of values reflecting the corresponding temperatures in degrees
    Fahrenheit and Celsius */
 int main() {
   float fahren, celsius; // temperature values in fahrenheit and celsius
@@ -20,5 +20,22 @@ int main() {
 
     printf("%3.0f\t%6.1f\n", fahren, celsius);
     fahren += step;
+  }
+
+  /* Print the inverse conversion */
+
+  lower = -20; // lower bound for celsius
+  upper = 150; // upper bound for celsius
+  step = 10; // increment for each row
+
+  printf("\n\nCelsius - Fahrenheit (%dC to %dC)\n", lower, upper);
+  printf("---------------------------------\n");
+
+  celsius = lower;
+  while(celsius <= upper) {
+    fahren = (9.0/5.0) * celsius + 32.0;
+
+    printf("%3.0f\t%6.1f\n", celsius, fahren);
+    celsius += step;
   }
 }
