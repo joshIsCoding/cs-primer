@@ -3,7 +3,7 @@
 /* Prints a table of values reflecting the corresponding temperatures in degrees
    Fahrenheit and Celsius */
 int main() {
-  int fahren, celsius; // temperature values in fahrenheit and celsius
+  float fahren, celsius; // temperature values in fahrenheit and celsius
   int lower, upper, step;
 
   lower = 0; // lower bound for fahrenheit
@@ -16,9 +16,9 @@ int main() {
   printf("---------------------------------\n");
 
   while(fahren <= upper) {
-    celsius = 5 * (fahren - 32) / 9;
+    celsius = (5.0/9.0) * (fahren - 32);
 
-    printf("%3d\t%3d\n", fahren, celsius);
+    printf("%3.0f\t%6.1f\n", fahren, celsius);
     fahren += step;
   }
 }
