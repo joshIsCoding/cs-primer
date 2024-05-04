@@ -6,6 +6,7 @@ int main() {
             integer that will generally exceed the capacity of the char type. Of course, any 
             character is just a bit pattern, so int suffices */
 
-  while((c = getchar()) != EOF)
+  while((c = getchar()) != EOF) /* NOTE: != has a higher precedent than =, so the parentheses
+                                   are absolutely necessary */
     putchar(c);
 }
