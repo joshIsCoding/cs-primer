@@ -28,14 +28,9 @@ int main() {
   upper = 150; // upper bound for celsius
   step = 10; // increment for each row
 
-  printf("\n\nCelsius - Fahrenheit (%dC to %dC)\n", lower, upper);
+  printf("\n\nCelsius - Fahrenheit (%dC to %dC)\n", upper, lower);
   printf("---------------------------------\n");
 
-  celsius = lower;
-  while(celsius <= upper) {
-    fahren = (9.0/5.0) * celsius + 32.0;
-
-    printf("%3.0f\t%6.1f\n", celsius, fahren);
-    celsius += step;
-  }
+  for(celsius = upper; celsius >= lower; celsius -= step)
+    printf("%3.0f\t%6.1f\n", celsius, (9.0/5.0) * celsius + 32.0);
 }
