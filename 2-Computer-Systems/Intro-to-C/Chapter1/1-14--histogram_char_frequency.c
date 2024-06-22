@@ -67,4 +67,91 @@ int main() {
       printf("Char: %2.c;\tCount: %d\n", i, counts[i]);
     }
   }
+
+  // Print Histogram
+  //
+  // Determine largest char-count
+  for (i = 0; i < MAX_CHAR; i++)
+    if (max_count < counts[i])
+      max_count = counts[i];
+
+  printf("\n\nHistogram\n\n"); // title
+
+  for (i = max_count; i > 0; i--) {
+    printf("%2.d\t| ", i); // print y-axis and value
+    for (j = 0; j < MAX_CHAR; j++) {
+      // don't allocate x-axis space for zero-frequency chars
+      if (counts[j] < 1)
+        continue;
+
+      if (counts[j] >= i)
+        printf(" || ");
+      else
+        printf("    ");
+    }
+    printf("\n");
+  }
+  printf("  \t -"); // cover y-axis span
+
+  for (j = 0; j < MAX_CHAR; j++) {
+    // don't allocate x-axis space for zero-frequency chars
+    if (counts[j] < 1)
+      continue;
+
+    printf("----"); // print x-axis border
+  }
+  
+  printf("\n");
+
+  printf("  \t  "); // cover y-axis span
+  for (j = 0; j < MAX_CHAR; j++) { // print present characters along x-axis
+    // don't allocate x-axis space for zero-frequency chars
+    if (counts[j] < 1)
+      continue;
+
+    if (j == '\a') {
+        printf(" \\a ");
+        continue;
+      }
+      if (j == '\b') {
+        printf(" \\b ");
+        continue;
+      }
+      if (j == '\f') {
+        printf(" \\f ");
+        continue;
+      }
+      if (j == '\n') {
+        printf(" \\n ");
+        continue;
+      }
+      if (j == '\r') {
+        printf(" \\r ");
+        continue;
+      }
+      if (j == '\t') {
+        printf(" \\t ");
+        continue;
+      }
+      if (j == '\v') {
+        printf(" \\v ");
+        continue;
+      }
+      if (j == '\'') {
+        printf(" \\' ");
+        continue;
+      }
+      if (j == '\\' ) {
+        printf("  \\ ");
+        continue;
+      }
+      if (j == ' ' ) {
+        printf(" \'\' ");
+        continue;
+      }
+
+    printf(" %2.c ", j);
+  }
+
+  printf("\n");
 }
