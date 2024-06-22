@@ -5,9 +5,7 @@ int main ()
   long c_space, c_tab, c_break; // counts of spaces, tabs and line breaks, respectively
   int c; // character variable
 
-  c_space = 0;
-  c_tab = 0;
-  c_break = 0;
+  c_space = c_tab = c_break = 0;
   while ((c = getchar()) != EOF) {
 
   /* IMPORTANT: single-quoted chars express the int ASCII codes for the enclosed character(s)
