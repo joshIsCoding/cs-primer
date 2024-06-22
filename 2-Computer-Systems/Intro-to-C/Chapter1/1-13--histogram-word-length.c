@@ -2,10 +2,10 @@
 
 #define IN        1  // state of being within a word
 #define OUT       0  // state of being between words
-#define MAX_WORD  21 // maximum word length to be tracked by program
+#define MAX_WORD  15 // maximum word length to be tracked by program
 
 int main() {
-  /* Array containing the count of words with a length equal to the array index */
+  /* Array containing the count of words with a length equal to the array index + 1 */
   int lengths[MAX_WORD];
   /* variables for tracking current char, length of current word, and whether currently within word */
   int i, c, length, in_word;
@@ -35,12 +35,17 @@ int main() {
     } else {
       if (in_word == IN)
         /* increment word count at index corresponding to current length */
-        lengths[length]++;
+        lengths[length - 1]++;
 
       in_word = OUT;
       length = 0;
     }
   }
+
+  // Print simple counts
+  printf("\n\nCounts\n\n");
+  for (i = 0; i < MAX_WORD; i++)
+    printf("Length: %d;\tCount: %d\n", i + 1, lengths[i]); // print word-length axis value
 
   // Print Histogram
   for (i = 0; i < MAX_WORD; i++)
