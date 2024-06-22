@@ -10,6 +10,7 @@ int main() {
   /* variables for tracking current char, length of current word, and whether currently within word */
   int i, c, length, in_word;
   int bar_i; // variable to track the length of histogram bars while they are printed
+  int j; // variable for printing horizontal details in vertical histogram
   int max_count; // variable to find the magnitude of the count of the most common word length
 
   // initialise variables
@@ -49,34 +50,62 @@ int main() {
   for (i = 0; i < MAX_WORD; i++)
     printf("Length: %d;\tCount: %d\n", i + 1, lengths[i]); // print word-length axis value
 
-  // Print Histogram
+  // Print Vertical Histogram
   //
-  // Determine largest count (ignoring those into the double digits and beyond, for now)
+  // Determine largest count
   for (i = 0; i < MAX_WORD; i++)
-    if (max_count < lengths[i] && max_count < 10)
+    if (max_count < lengths[i])
       max_count = lengths[i];
 
-  printf("\n\nHorizontal Histogram\n\n"); // title
+  printf("\n\nVertical Histogram\n\n"); // title
 
-  // Print y-axis
-   printf(" \t "); // indent to cover span of the x-axis (and the zeroth count)
-  for (i = 1; i <= max_count; i++)
-    printf(" %d", i); // print the values of the y-axis
-
-  printf("\n");
-
-  printf(" \t"); // indent to cover span of the x-axis
-  for (i = 0; i <= max_count; i++)
-    printf("--"); // print the axis dividing line
-
-  // Print x-axis and histogram bars
-  printf("\n");
-  for (i = 0; i < MAX_WORD; i++) {
-    printf("%d\t|", i + 1); // print word-length axis value 
-
-    for (bar_i = 0; bar_i < lengths[i]; bar_i++)
-      printf("=="); // print bar segment for each word counted with the current word length.
-
+  for (i = max_count; i > 0; i--) {
+    printf("%2.d\t| ", i); // print y-axis and value
+    for (j = 0; j < MAX_WORD; j++) {
+      if (lengths[j] >= i)
+        printf(" || ");
+      else
+        printf("    ");
+    }
     printf("\n");
   }
+  printf("  \t -"); // cover y-axis span
+  for (j = 0; j < MAX_WORD; j++)
+    printf("----"); // print x-axis border
+  
+  printf("\n");
+
+  printf("  \t  "); // cover y-axis span
+  for (j = 0; j < MAX_WORD; j++)
+    printf(" %2.d ", j + 1); // print x-axis values
+
+  printf("\n");
+
+
+
+  // Print Horizontal Histogram
+
+  // printf("\n\nHorizontal Histogram\n\n"); // title
+
+  // // Print y-axis
+  // printf(" \t "); // indent to cover span of the x-axis (and the zeroth count)
+  // for (i = 1; i <= max_count; i++)
+  //   printf(" %2.d", i); // print the values of the y-axis
+
+  // printf("\n");
+
+  // printf(" \t"); // indent to cover span of the x-axis
+  // for (i = 0; i <= max_count; i++)
+  //   printf("--"); // print the axis dividing line
+
+  // // Print x-axis and histogram bars
+  // printf("\n");
+  // for (i = 0; i < MAX_WORD; i++) {
+  //   printf("%d\t|", i + 1); // print word-length axis value 
+
+  //   for (bar_i = 0; bar_i < lengths[i]; bar_i++)
+  //     printf("=="); // print bar segment for each word counted with the current word length.
+
+  //   printf("\n");
+  // }
 }
