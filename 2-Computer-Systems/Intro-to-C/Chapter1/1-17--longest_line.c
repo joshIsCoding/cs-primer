@@ -11,10 +11,7 @@ void copy(char from[], char to[], int max_len);
 int main() {
   char line[MAX_LINE], longest[MAX_LINE]; // current input line initialised to the default increment size
   int len, max; // length of the current line, max length of the longest line
-
-  for(int i = 0; i < MAX_LINE; i++) { // initialise the char-arrays
-    line[i]= longest[i] = 0;
-  }
+  len = max = 0;
 
   while ((len = get_line(line, MAX_LINE)) > 0) { // get the next line
     if (len > max) { // if the current line is the longest so far
@@ -58,7 +55,7 @@ int get_line(char s[], int lim) {
     return -1;
   }
 
-  s[safe_i + 1] = '\0';
+  s[safe_i + 1] = '\0'; // the null character; a convention for ending string literals
 
   return safe_i;
 }
