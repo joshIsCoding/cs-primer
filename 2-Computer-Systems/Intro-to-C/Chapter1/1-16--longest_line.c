@@ -42,8 +42,10 @@ int get_line(char s[], int lim) {
   i = 1;
 
   // stop loop if limit, EOF, newline or length overflow reached
-  while (i != UNSIGNED_OVERFLOW && safe_i < lim && (c = getchar()) != EOF && c != '\n') {
-    s[safe_i] = c;
+  while (i != UNSIGNED_OVERFLOW && (c = getchar()) != EOF && c != '\n') {
+    if (safe_i < lim) {
+      s[safe_i] = c;
+    }
     safe_i = i;
     i++;
   }
