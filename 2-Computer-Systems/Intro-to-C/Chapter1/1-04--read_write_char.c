@@ -4,7 +4,7 @@
 int main() {
   int c; /* we use int because EOF (defined in stdio.h) is a special, hardware dependent
             integer that will generally exceed the capacity of the char type. Of course, any 
-            character is just a bit pattern, so int suffices */
+            character is just a bit-pattern, so int suffices */
 
   while((c = getchar()) != EOF) /* NOTE: != has a higher precedent than =, so the parentheses
                                    are absolutely necessary */
