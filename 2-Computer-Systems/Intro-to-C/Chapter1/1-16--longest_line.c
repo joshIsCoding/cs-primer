@@ -32,9 +32,9 @@ int main() {
 }
 
 // Return the line length of an input line and write the string to s, up to the maximum length lim
-// The returned length can exceed lim, up to maximum signed int
+// The returned length can exceed lim, up to maximum unsigned int
 //
-// Lines longer than max signed int will return -1.
+// Lines longer than max unsigned int will return -1.
 int get_line(char s[], int lim) {
   int c; 
   unsigned int i, safe_i;
