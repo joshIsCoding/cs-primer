@@ -62,8 +62,9 @@ void print_slice(char t[], unsigned int start, unsigned int end) {
 
   unsigned int i;
 
-  for (i = start; i < end; i++)
+  // skip the expected new-line character at the end of the slice
+  for (i = start; i < end - 1; i++)
     printf("%c", t[i]);
 
-  printf("\t(%d)", end - start);
+  printf("\t(%d)\n", end - start); // restore the missing new-line char
 }
