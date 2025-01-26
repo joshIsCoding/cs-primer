@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 #define MAX_TEXT 1000
-#define UNSIGNED_OVERFLOW 0
 
 int get_text(char text[], unsigned int max_len);
 void print_long_lines(char text[], unsigned int min_len, unsigned int text_len);
