@@ -9,7 +9,6 @@ void print_slice(char t[], unsigned int start, unsigned int end);
 
 int main() {
   char text[MAX_TEXT];
-  char line[MAX_TEXT];
   unsigned int len;
 
   len = get_text(text, MAX_TEXT);
@@ -67,4 +66,6 @@ void print_slice(char t[], unsigned int start, unsigned int end) {
 
   for (i = start; i < end; i++)
     printf("%c", t[i]);
+
+  printf("\t(%d)", end - start);
 }
