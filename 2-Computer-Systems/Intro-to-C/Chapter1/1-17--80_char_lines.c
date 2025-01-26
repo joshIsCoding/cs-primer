@@ -35,7 +35,7 @@ int get_text(char t[], unsigned int lim) {
 
 /*
   * Prints the lines of the `t` text parameter which meet or exceed the minimum
-  * required length `l_len` parameter, skipping the rest.
+  * required length `l_len` parameter, skipping the rest. t_len must be the length of t.
   */
 void print_long_lines(char t[], unsigned int l_len, unsigned int t_len) {
   unsigned int line_start, line_end, i;
@@ -43,7 +43,6 @@ void print_long_lines(char t[], unsigned int l_len, unsigned int t_len) {
 
   printf("Printing lines of at least %d characters only:\n\n", l_len);
 
-  // stop loop if limit, EOF, newline or length overflow reached
   for (i = 0; i < t_len; i++) {
     line_end++;
 
