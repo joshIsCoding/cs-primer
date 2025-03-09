@@ -36,15 +36,23 @@ unsigned int get_text(char text_arr[], unsigned int max_len) {
 }
 
 void put_detabbed(char text[], unsigned int len, unsigned int tab_size) {
-  unsigned int i;
+  unsigned int cursor, col_pos, spaces_req;
 
-  for(i = 0; i < len; i++) {
-    if(text[i] == '\t') {
-      print_spaces(tab_size);
+  col_pos = 0;
+  for(cursor = 0; cursor < len; cursor++) {
+    if(text[cursor] == '\t') {
+      //
+      spaces_req = tab_size - (col_pos % tab_size);
+      print_spaces(spaces_req);
+      col_pos += spaces_req;
     } else {
-      putchar(text[i]);
+      putchar(text[cursor]);
+      col_pos++;
     }
 
+    if (text[cursor] == '\n'){
+      col_pos = 0;
+    }
   }
 }
 
