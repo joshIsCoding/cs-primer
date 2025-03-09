@@ -1,6 +1,6 @@
 #include <stdio.h>
+#include "tabstops.h"
 
-#define TAB_COLS 4 // the effective number of spaces per tab
 #define MAX_TEXT 1000 // maximum length of input text
 
 unsigned int get_text(char text_arr[], unsigned int max_len);
@@ -14,7 +14,7 @@ int main() {
   printf("-> Enter your text:\n");
   text_len = get_text(text, MAX_TEXT);
   printf("-> Detabbing your text...\n\n");
-  put_detabbed(text, text_len, TAB_COLS);
+  put_detabbed(text, text_len, TAB_STOPS);
   printf("\n\n-> Done.\n");
 
   return 0;
