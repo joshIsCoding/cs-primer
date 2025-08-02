@@ -2,15 +2,13 @@
 
 #define GREETING_LEN 12 // the number of chars required for a nice greeting
 
-int main() {
-  char greeting[GREETING_LEN] = "HELLO, world";
+int main(int argc, char** argv) {
   unsigned int i;
 
-  for (i = 0; i < GREETING_LEN; i++) {
-    putchar(greeting[i]);
+  printf("Hello, ");
+  for (i = 1; i < argc; i++) {
+    printf("%s, ", argv[i]);
   }
 
-  putchar('\n');
-
-  return 0;
+  printf("and the World!\n");
 }
