@@ -1,0 +1,11 @@
+# Fast Pangram
+## Strategy
+1. Use a 4-byte int `alpha_inclusion` to record 26 bits reflecting the presence or absence of each alphabetical character
+2. Iterate through the string until the null character is found (or EOF)
+3. Convert each character to a single bit left-shifted by its alphabetical index
+ - Handle upper-case characters by comparing the char-code with 'A' and 'Z', and subtracting 'A' to get the shift amount
+ - Handle lower-case characters by comparing with 'a' and 'z' and subtracting 'a' to get the shift amount
+4. OR the shifted value with `alpha_inclusion` to track that character
+5. If `alpha_inclusion`  is equal to 2^26 (`67108864`), then all alphabetical characters were present in the string
+
+
