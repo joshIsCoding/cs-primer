@@ -17,8 +17,8 @@ int main() {
    * - Incrementing by 1 for integers until overflow should be resilient
    * - Floating point is harder. You'd presumably have to check for infinity,
    * though this isn't guaranteed outside of the IEEE floating point
-   * - The increment also isn't obvious due to the impacts of rounding (and the
-   *   different rounding modes).
+   * - You'd also want to increase the increment as needed and verify the number
+   * changes in each iteration.
    */
   return 0;
 }
