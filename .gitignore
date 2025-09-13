@@ -57,8 +57,12 @@ dkms.conf
 # Templates
 **/ProjectTemplate/
 
-# Yarn
+# Node/Yarn
 **/node_modules/
+.node-version
 
-// Obsidian utilities
+# Obsidian utilities
 **/.obsidian/**
+
+# OS BS
+**/.DS_store
