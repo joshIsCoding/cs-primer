@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define COMPLETE_ALPHA_SET 67108863 /* 2^26 */
+#define COMPLETE_ALPHA_SET 67108863 /* 2^26 - */
 
 bool ispangram(char *s) {
   // A bit vector with 26 significant bits, where each represents inclusion in
@@ -23,13 +23,12 @@ bool ispangram(char *s) {
       continue;
     }
     alpha_set |= (1 << alpha_index);
+
+    if (alpha_set == COMPLETE_ALPHA_SET) {
+      return true;
+    }
   }
 
-  if (alpha_set == COMPLETE_ALPHA_SET) {
-    return true;
-  }
-
-  // TODO implement this!
   return false;
 }
 
