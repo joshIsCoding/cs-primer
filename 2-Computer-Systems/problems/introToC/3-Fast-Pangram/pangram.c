@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define COMPLETE_ALPHA_SET 67108863 /* 2^26 - */
+#define COMPLETE_ALPHA_SET 0x3ffffff /* 26 significant bits */
 
 bool ispangram(char *s) {
   // A bit vector with 26 significant bits, where each represents inclusion in
@@ -12,9 +12,7 @@ bool ispangram(char *s) {
   // corresponding case-normalsed letter of the english alphabet.
   unsigned int i = 0, c = 0, alpha_index = 0;
 
-  while ((c = s[i]) != '\n' && c != '\0') {
-    i++;
-
+  while ((c = s[i++]) != '\n' && c != '\0') {
     if (c >= 'a' && c <= 'z') {
       alpha_index = (c - 'a');
     } else if (c >= 'A' && c <= 'Z') {
