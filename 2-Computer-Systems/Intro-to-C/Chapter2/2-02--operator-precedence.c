@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 
 int main() {
 
@@ -9,6 +9,13 @@ int main() {
    * for(i = 0; i < lim - 1 && (c = getchar()) != '\n'  && c != EOF; ++i)
    *    s[i] = c;
    */
+
+  int i, lim = 3000;
+  char c;
+  char s[lim];
+
+  for (i = 0; i < lim - 1 && (c = getchar()) != '\n' && c != EOF; ++i)
+    s[i] = c;
 
   return 0;
 }
