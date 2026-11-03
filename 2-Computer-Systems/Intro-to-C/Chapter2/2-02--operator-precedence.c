@@ -14,8 +14,15 @@ int main() {
   char c;
   char s[lim];
 
-  for (i = 0; i < lim - 1 && (c = getchar()) != '\n' && c != EOF; ++i)
+  for (i = 0; i < lim - 1; ++i) {
+    c = getchar();
+
+    if (c == '\n' || c == EOF) {
+      break;
+    }
+
     s[i] = c;
+  }
 
   printf("\nThe string:\n");
   printf("%s\n", s);
