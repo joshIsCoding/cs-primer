@@ -17,5 +17,8 @@ int main() {
   for (i = 0; i < lim - 1 && (c = getchar()) != '\n' && c != EOF; ++i)
     s[i] = c;
 
+  printf("\nThe string:\n");
+  printf("%s\n", s);
+
   return 0;
 }
